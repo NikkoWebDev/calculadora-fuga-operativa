@@ -1,11 +1,11 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" data-palette="mint">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
   <title>Calculadora de Fuga Operativa y ROI en Automatización | NikkoDev</title>
-  <meta name="description" content="Calcula cuánto dinero y horas pierde tu empresa al mes en WhatsApp repetitivo y tareas manuales. Diagnóstico en vivo para empresas de Sogamoso.">
-  <meta name="theme-color" content="#0b0d10">
+  <meta name="description" content="Calcula cuánto tiempo y dinero se van en tu empresa respondiendo lo mismo por WhatsApp y transcribiendo datos a mano. Diagnóstico en vivo para Sogamoso.">
+  <meta name="theme-color" content="#F8FAFC">
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
 
   <!-- OpenGraph / Social -->
@@ -18,6 +18,16 @@
 </head>
 <body>
 
+  <!-- Fondo Vivo FX de NikkoDev (Blobs + Grid + Linterna + Constelación Canvas) -->
+  <div class="fx-bg" aria-hidden="true">
+    <div class="fx-blob b1"></div>
+    <div class="fx-blob b2"></div>
+    <div class="fx-blob b3"></div>
+    <div class="fx-grid"></div>
+    <canvas id="fxNet" class="fx-net"></canvas>
+    <div class="fx-vignette"></div>
+  </div>
+
   <main class="app-container">
     
     <!-- Barra Superior -->
@@ -29,24 +39,45 @@
           <div class="brand-sub">Sogamoso · Automatización & IA</div>
         </div>
       </a>
-      <div class="badge-live">
-        <span class="badge-dot"></span>
-        <span>En vivo · Taller</span>
+
+      <div class="nav-actions">
+        <div class="badge-live">
+          <span class="badge-dot"></span>
+          <span>En vivo · Taller</span>
+        </div>
+        <button type="button" class="theme-toggle" id="btn-theme-toggle" aria-label="Cambiar tema">
+          <svg id="theme-icon-sun" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none;">
+            <circle cx="12" cy="12" r="5"></circle>
+            <line x1="12" y1="1" x2="12" y2="3"></line>
+            <line x1="12" y1="21" x2="12" y2="23"></line>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+            <line x1="1" y1="12" x2="3" y2="12"></line>
+            <line x1="21" y1="12" x2="23" y2="12"></line>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+          </svg>
+          <svg id="theme-icon-moon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+          </svg>
+        </button>
       </div>
     </header>
 
-    <!-- Encabezado / Hero Auditorio -->
+    <!-- Encabezado Humano y Profesional -->
     <section class="hero">
-      <span class="kicker">Diagnóstico Rápido B2B</span>
+      <div class="kicker-pill">
+        <span>🌱 Diagnóstico Pragmático B2B · Sogamoso</span>
+      </div>
       <h1 class="hero-title">
-        ¿Cuánto dinero se fuga en tu empresa por <span class="highlight">tareas manuales</span>?
+        Calcula cuánto tiempo y nómina pierde tu equipo <span class="highlight">respondiendo lo mismo</span>
       </h1>
       <p class="hero-desc">
-        Ajusta los controles según tu operación diaria y calcula en tiempo real las horas y el capital que tu equipo recuperaría automatizando consultas repetitivas.
+        Sin promesas infladas ni tecnicismos. Mueve los controles con los datos reales de tu negocio y mira cuántas horas y dinero se pueden recuperar automatizando consultas repetitivas.
       </p>
     </section>
 
-    <!-- Panel de Inputs de la Calculadora -->
+    <!-- Panel de Parámetros -->
     <section class="glass-panel">
       
       <div class="panel-header">
@@ -63,22 +94,22 @@
             <path d="M12 18h.01"></path>
             <path d="M8 18h.01"></path>
           </svg>
-          1. Parámetros de tu Operación
+          1. ¿Cómo opera hoy tu empresa?
         </h2>
         <span class="panel-hint">Valores en COP</span>
       </div>
 
-      <!-- 1. Sector -->
+      <!-- Sector -->
       <div class="control-group">
-        <label class="control-label" style="margin-bottom: 0.5rem;">
-          Sector de tu empresa / institución
+        <label class="control-label" style="margin-bottom: 0.55rem;">
+          Sector de tu actividad
         </label>
         
         <div class="sector-grid" role="radiogroup" aria-label="Sector de la empresa">
           <button type="button" class="sector-btn" data-sector="educacion" role="radio" aria-checked="false">
             <span class="sec-icon">🎓</span>
             <span class="sec-name">Educación</span>
-            <span class="sec-sub">Colegios / Inst.</span>
+            <span class="sec-sub">Colegios / Institutos</span>
           </button>
           
           <button type="button" class="sector-btn active" data-sector="industria" role="radio" aria-checked="true">
@@ -90,33 +121,33 @@
           <button type="button" class="sector-btn" data-sector="salud" role="radio" aria-checked="false">
             <span class="sec-icon">🩺</span>
             <span class="sec-name">Salud</span>
-            <span class="sec-sub">IPS / Clínicas</span>
+            <span class="sec-sub">IPS / Consultorios</span>
           </button>
           
           <button type="button" class="sector-btn" data-sector="transporte" role="radio" aria-checked="false">
             <span class="sec-icon">🚚</span>
             <span class="sec-name">Transporte</span>
-            <span class="sec-sub">Carga / Logística</span>
+            <span class="sec-sub">Carga / Envíos</span>
           </button>
           
           <button type="button" class="sector-btn" data-sector="comercio" role="radio" aria-checked="false">
             <span class="sec-icon">💼</span>
             <span class="sec-name">Comercio</span>
-            <span class="sec-sub">Servicios / Retail</span>
+            <span class="sec-sub">Servicios / Tiendas</span>
           </button>
         </div>
 
-        <!-- Microcopy contextual dinámico -->
+        <!-- Microcopy contextual realista -->
         <div class="sector-context-box" id="sector-context-text">
-          <strong>Industria / Ferretería:</strong> Cotizaciones en WhatsApp, consulta de existencias en bodega y remisiones manuales.
+          <strong>Industria / Ferretería:</strong> Cotizaciones por chat, pedir existencias a bodega y transcribir remisiones a mano.
         </div>
       </div>
 
-      <!-- 2. Personas -->
+      <!-- Personas -->
       <div class="control-group">
         <div class="control-label-row">
           <label for="personas-range" class="control-label">
-            Personas atendiendo WhatsApp / digitando
+            Personas atendiendo WhatsApp o digitando
           </label>
           <span class="control-val-badge" id="personas-val">2</span>
         </div>
@@ -137,18 +168,18 @@
         </div>
         
         <div class="slider-ticks">
-          <span>1 pers.</span>
-          <span>5 pers.</span>
-          <span>10 pers.</span>
-          <span>15 pers.</span>
+          <span>1 persona</span>
+          <span>5 personas</span>
+          <span>10 personas</span>
+          <span>15 personas</span>
         </div>
       </div>
 
-      <!-- 3. Horas por semana -->
+      <!-- Horas semanales -->
       <div class="control-group">
         <div class="control-label-row">
           <label for="horas-range" class="control-label">
-            Horas semanales que cada persona pierde en lo mismo
+            Horas por semana que cada uno pierde en lo mismo
           </label>
           <span class="control-val-badge" id="horas-val">10h</span>
         </div>
@@ -169,18 +200,18 @@
         </div>
         
         <div class="slider-ticks">
-          <span>2h/sem (40m/día)</span>
-          <span>10h/sem (2h/día)</span>
+          <span>2h/sem (~25 min/día)</span>
+          <span>10h/sem (~2h/día)</span>
           <span>20h/sem</span>
           <span>30h/sem</span>
         </div>
       </div>
 
-      <!-- 4. Costo promedio por hora operativa -->
+      <!-- Costo Hora en COP -->
       <div class="control-group">
         <div class="control-label-row">
           <label for="costo-hora-input" class="control-label">
-            Costo promedio hora operativa (COP)
+            Costo promedio por hora del colaborador
           </label>
         </div>
         
@@ -206,7 +237,7 @@
         </div>
 
         <small class="cost-footnote">
-          ℹ️ $12.000 COP/hora equivale a un salario mínimo legal (~$1.42M) con prestaciones, seguridad social y auxilio de transporte (~$2.1M total empresa ÷ 176h).
+          💡 $12.000 COP/hora refleja un salario mínimo legal (~$1.42M) sumando prestaciones de ley, seguridad social y auxilio de transporte (~$2.1M costo real empresa ÷ 176h).
         </small>
       </div>
 
@@ -215,12 +246,12 @@
     <!-- Panel de Resultados en Tiempo Real -->
     <section class="results-panel">
       
-      <div class="panel-header" style="margin-bottom: 0.8rem;">
+      <div class="panel-header" style="margin-bottom: 0.85rem;">
         <h2 class="panel-title">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
           </svg>
-          2. Diagnóstico de Impacto en Tiempo Real
+          2. Lo que los números muestran hoy
         </h2>
       </div>
 
@@ -233,10 +264,10 @@
               <circle cx="12" cy="12" r="10"></circle>
               <polyline points="12 6 12 12 16 14"></polyline>
             </svg>
-            Fuga Operativa Mensual
+            Costo Mensual en Atención Manual
           </div>
           <div class="result-value warning" id="res-fuga-mensual">$ 1.039.200</div>
-          <p class="result-caption">Nómina pagada directamente por responder chats y transcribir datos.</p>
+          <p class="result-caption">Nómina mensual pagada exclusivamente por teclear respuestas idénticas y pasar datos.</p>
         </div>
 
         <!-- Fuga Anual -->
@@ -245,10 +276,10 @@
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
             </svg>
-            Fuga Operativa Anual
+            Costo Acumulado al Año
           </div>
           <div class="result-value danger" id="res-fuga-anual">$ 12.470.400</div>
-          <p class="result-caption">Dinero que tu empresa drena al año en tareas 100% automatizables.</p>
+          <p class="result-caption">La fuga silenciosa que tu negocio asume como normal año tras año.</p>
         </div>
 
         <!-- Horas Recuperables -->
@@ -258,11 +289,11 @@
               <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
               <polyline points="22 4 12 14.01 9 11.01"></polyline>
             </svg>
-            Horas Recuperables al Año (70% automatizable)
+            Tiempo que el equipo recupera (70% automatizable)
           </div>
           <div class="result-value success" id="res-horas-recuperables">728 h</div>
           <p class="result-caption">
-            Tiempo neto que tu equipo gana para vender más, cerrar clientes presenciales o mejorar la atención, en vez de teclear lo mismo todo el día.
+            Horas al año que vuelven a tu empresa para atender clientes presenciales, cerrar ventas y resolver casos difíciles sin sobrecargar a tu gente.
           </p>
         </div>
 
@@ -275,14 +306,14 @@
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
             </svg>
-            Retorno de Inversión (ROI)
+            Comparativa de Inversión y Retorno
           </div>
           <span class="payback-badge" id="res-payback-badge">Retorno en ~2.1 meses</span>
         </div>
 
         <div class="roi-comparison-rows">
           <div class="roi-col">
-            <span class="roi-col-label">Pierdes hoy al año:</span>
+            <span class="roi-col-label">Se te va al año hoy:</span>
             <span class="roi-col-num strike" id="res-fuga-anual-vs">$ 12.470.400</span>
           </div>
           <div class="roi-col">
@@ -292,7 +323,7 @@
         </div>
 
         <p class="roi-note" id="res-payback-text">
-          La inversión se paga sola en poco más de un mes y el resto del año representa ahorro operativo directo.
+          La automatización se paga sola en aproximadamente 2 meses con el tiempo ahorrado. A partir de ahí, es pura rentabilidad y tranquilidad para el equipo.
         </p>
       </div>
 
@@ -305,31 +336,31 @@
             <polyline points="12 5 19 12 12 19"></polyline>
           </svg>
         </button>
-        <p class="cta-subtext">Sesión de 30 minutos sin costo para identificar cuellos de botella en tu empresa.</p>
+        <p class="cta-subtext">30 minutos presenciales en Sogamoso o por videollamada para revisar tus procesos sin ningún compromiso.</p>
       </div>
 
       <!-- Mini Formulario Desplegable para Lead Calificado -->
       <div class="lead-form-box" id="lead-form-box">
         <div class="lead-form-header">
           <h3 class="lead-form-title">Tus datos para preparar la sesión</h3>
-          <p class="lead-form-sub">Envía este cálculo a mi WhatsApp con 1 toque al salir del taller:</p>
+          <p class="lead-form-sub">Envíame el diagnóstico directo a WhatsApp con 1 toque al salir del taller:</p>
         </div>
 
         <div class="form-grid">
           <div class="form-field">
-            <label for="lead-nombre">Tu nombre completo</label>
+            <label for="lead-nombre">Tu nombre</label>
             <input type="text" id="lead-nombre" name="nombre" class="form-input" placeholder="Ej: Carlos Gómez" autocomplete="name">
           </div>
           <div class="form-field">
-            <label for="lead-empresa">Nombre de tu empresa</label>
+            <label for="lead-empresa">Nombre de tu empresa / entidad</label>
             <input type="text" id="lead-empresa" name="empresa" class="form-input" placeholder="Ej: Ferretería El Sol" autocomplete="organization">
           </div>
           <div class="form-field">
-            <label for="lead-cargo">Cargo en la empresa</label>
+            <label for="lead-cargo">Tu cargo o rol</label>
             <input type="text" id="lead-cargo" name="cargo" class="form-input" placeholder="Ej: Gerente / Administrador">
           </div>
           <div class="form-field">
-            <label for="lead-whatsapp">Tu WhatsApp de contacto</label>
+            <label for="lead-whatsapp">Tu WhatsApp</label>
             <input type="tel" id="lead-whatsapp" name="whatsapp" class="form-input" placeholder="Ej: 310 123 4567" autocomplete="tel">
           </div>
         </div>
@@ -367,8 +398,8 @@
     <!-- Footer -->
     <footer class="app-footer">
       <p>
-        Desarrollado por <strong>Brayan (NikkoDev)</strong> · Sogamoso, Boyacá<br>
-        Automatización e Inteligencia Artificial Pragmática · <a href="https://nikko.dev" target="_blank" rel="noopener noreferrer">nikko.dev</a>
+        Diseñado y desarrollado por <strong>Brayan (NikkoDev)</strong> · Sogamoso, Boyacá<br>
+        Automatización e Inteligencia Artificial Pragmática para Empresas · <a href="https://nikko.dev" target="_blank" rel="noopener noreferrer">nikko.dev</a>
       </p>
     </footer>
 

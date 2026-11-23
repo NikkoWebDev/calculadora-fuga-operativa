@@ -1,36 +1,37 @@
 /**
  * Calculadora de Fuga Operativa y Retorno de Automatización
- * Optimizada para eventos en vivo en Sogamoso · nikko.dev
+ * FX Engine & Runtime inspirado en NikkoDev OS
+ * 0 dependencias · Ultraligero · Mobile-First
  */
 
 (function () {
   'use strict';
 
-  // Configuración y datos por sector
+  // Configuración y datos contextuales por sector
   const SECTORS = {
     educacion: {
-      name: 'Colegio / Educación',
-      context: 'Matrículas, notas, preguntas frecuentes de acudientes y circulares por WhatsApp.',
+      name: 'Educación (Colegios / Institutos)',
+      context: 'Matrículas, pedir notas, consultar horarios y responder 150 veces la misma pregunta de acudientes por WhatsApp.',
       icon: '🎓'
     },
     industria: {
       name: 'Industria / Ferretería',
-      context: 'Cotizaciones en WhatsApp, consulta de existencias en bodega y remisiones manuales.',
+      context: 'Cotizaciones por chat, pedir existencias a bodega y transcribir remisiones a mano.',
       icon: '⚙️'
     },
     salud: {
       name: 'Salud / IPS',
-      context: 'Agendamiento de citas médicas, autorizaciones, recordatorios y gestión de inasistencias.',
+      context: 'Agendar citas, autorizaciones de EPS, llamadas de confirmación y lidiar con pacientes que no llegan.',
       icon: '🩺'
     },
     transporte: {
       name: 'Transporte / Logística',
-      context: 'Seguimiento de fletes, planilla de viaje y novedades de ruta repetidas a clientes.',
+      context: 'Avisar por dónde va el camión, planillas de viaje, remisiones de carga y reportar novedades de ruta.',
       icon: '🚚'
     },
     comercio: {
       name: 'Comercio / Servicios',
-      context: 'Atención de pedidos por chat, catálogo desactualizado y transcripción a facturación.',
+      context: 'Pasar catálogo en PDF, confirmar existencias, tomar pedidos por chat y transcribirlos al sistema contable.',
       icon: '💼'
     }
   };
@@ -54,6 +55,7 @@
     empresa: '',
     cargo: '',
     whatsapp: '',
+    isDark: false,
     calc: {
       fugaMensual: 0,
       fugaAnual: 0,
@@ -64,6 +66,7 @@
 
   // Referencias DOM
   const dom = {
+    root: document.documentElement,
     sectorButtons: document.querySelectorAll('.sector-btn'),
     sectorContext: document.getElementById('sector-context-text'),
     personasRange: document.getElementById('personas-range'),
@@ -93,10 +96,18 @@
     btnSendWhatsapp: document.getElementById('btn-send-whatsapp'),
     btnSendEmail: document.getElementById('btn-send-email'),
     btnCopyReport: document.getElementById('btn-copy-report'),
-    toast: document.getElementById('toast')
+    toast: document.getElementById('toast'),
+    // Tema
+    btnThemeToggle: document.getElementById('btn-theme-toggle'),
+    iconSun: document.getElementById('theme-icon-sun'),
+    iconMoon: document.getElementById('theme-icon-moon'),
+    // FX
+    fxBg: document.querySelector('.fx-bg'),
+    canvasNet: document.getElementById('fxNet'),
+    glassPanels: document.querySelectorAll('.glass-panel, .results-panel')
   };
 
-  // Formateadores
+  // Formateadores de moneda colombiana
   const currencyFormatter = new Intl.NumberFormat('es-CO', {
     style: 'currency',
     currency: 'COP',
@@ -114,7 +125,7 @@
     // Fuga Operativa Anual (COP) = Fuga Mensual × 12
     const fugaAnual = Math.round(fugaMensual * 12);
 
-    // Horas recuperables al año (asumiendo 70% de automatización)
+    // Horas recuperables al año (asumiendo 70% de automatización de tareas repetitivas)
     const horasRecuperables = Math.round(personas * horas * CONSTANTS.WEEKS_PER_YEAR * CONSTANTS.AUTOMATION_EFFICIENCY);
 
     // Payback = 1.500.000 / (Fuga Mensual × 0.70)
@@ -136,26 +147,24 @@
   function updateUI() {
     const { fugaMensual, fugaAnual, horasRecuperables, paybackMeses } = state.calc;
 
-    // Actualizar cifras
     dom.fugaMensualVal.textContent = currencyFormatter.format(fugaMensual);
     dom.fugaAnualVal.textContent = currencyFormatter.format(fugaAnual);
     dom.horasRecuperablesVal.textContent = `${numberFormatter.format(horasRecuperables)} h`;
     dom.fugaAnualVs.textContent = currencyFormatter.format(fugaAnual);
 
-    // Actualizar badge de payback
+    // Payback humanizado
     if (paybackMeses <= 0.95) {
-      const dias = Math.max(12, Math.round(paybackMeses * 30));
+      const dias = Math.max(14, Math.round(paybackMeses * 30));
       dom.paybackBadge.textContent = `Retorno en ~${dias} días`;
-      dom.paybackText.textContent = `La inversión de $1.5M COP se amortiza en menos de un mes con el ahorro de tiempo.`;
+      dom.paybackText.textContent = `La automatización (Sprint de $1.5M COP) se amortiza en menos de un mes con el tiempo ahorrado. A partir de ahí, es pura rentabilidad.`;
     } else if (paybackMeses <= 1.25) {
       dom.paybackBadge.textContent = `Retorno en ~1 mes`;
       dom.paybackText.textContent = `La inversión se cubre por completo durante las primeras 4 semanas post-despliegue.`;
     } else {
       dom.paybackBadge.textContent = `Retorno en ~${paybackMeses.toFixed(1)} meses`;
-      dom.paybackText.textContent = `Recuperas la inversión en aprox. ${paybackMeses.toFixed(1)} meses y el resto del año es ahorro neto.`;
+      dom.paybackText.textContent = `La automatización se paga sola en aprox. ${paybackMeses.toFixed(1)} meses con el tiempo ahorrado. A partir de ahí, es pura rentabilidad y tranquilidad para el equipo.`;
     }
 
-    // Actualizar links de contacto con los datos en vivo
     updateContactLinks();
   }
 
@@ -169,25 +178,25 @@
 
     const paybackStr = paybackMeses <= 1 ? 'menos de 1 mes' : `${paybackMeses.toFixed(1)} meses`;
 
-    return `Hola Brayan, estuve en el taller en Sogamoso.
+    return `Hola Brayan, estuve en tu taller en Sogamoso.
 
-Acabo de calcular la fuga operativa de mi empresa con la herramienta:
+Hice el cálculo de mi empresa en la calculadora y estos fueron los resultados:
 
-📋 DATOS DEL DIAGNÓSTICO
+📋 DATOS DE MI OPERACIÓN
 • Sector: ${sec.name}
 • Empresa: ${empresa}
 • Contacto: ${nombre} (${cargo})${tel ? `\n• WhatsApp: ${tel}` : ''}
 
 📊 RESULTADOS ESTIMADOS
-• Personas en tareas repetitivas: ${state.personas}
-• Horas perdidas por persona/sem: ${state.horas}h
+• Personas en atención manual / WhatsApp: ${state.personas}
+• Horas dedicadas a consultas repetitivas: ${state.horas}h/semana por persona
 • Costo hora promedio: ${currencyFormatter.format(state.costoHora)} COP
-• Fuga operativa mensual: ${currencyFormatter.format(fugaMensual)} COP
-• Fuga operativa anual: ${currencyFormatter.format(fugaAnual)} COP
+• Costo mensual de la atención manual: ${currencyFormatter.format(fugaMensual)} COP
+• Costo anual acumulado: ${currencyFormatter.format(fugaAnual)} COP
 • Horas recuperables al año: ${numberFormatter.format(horasRecuperables)} horas (70% automatizable)
-• Retorno de inversión (Sprint $1.5M): ${paybackStr}
+• Retorno estimado de automatización (Sprint $1.5M): ${paybackStr}
 
-Me gustaría coordinar la auditoría gratuita de 30 min para evaluar qué procesos conviene automatizar primero.`;
+Me interesa coordinar los 30 minutos de auditoría gratuita para revisar en detalle mis procesos y ver por dónde conviene empezar.`;
   }
 
   function updateContactLinks() {
@@ -198,7 +207,7 @@ Me gustaría coordinar la auditoría gratuita de 30 min para evaluar qué proces
     dom.btnSendWhatsapp.href = `https://wa.me/${CONSTANTS.WHATSAPP_NUMBER}?text=${encoded}`;
 
     // Email
-    const subject = encodeURIComponent(`Auditoría de Automatización - ${state.empresa.trim() || 'Sogamoso'}`);
+    const subject = encodeURIComponent(`Auditoría de Procesos - ${state.empresa.trim() || 'Sogamoso'}`);
     dom.btnSendEmail.href = `mailto:${CONSTANTS.CONTACT_EMAIL}?subject=${subject}&body=${encoded}`;
   }
 
@@ -210,7 +219,152 @@ Me gustaría coordinar la auditoría gratuita de 30 min para evaluar qué proces
     }, 2800);
   }
 
-  // Event Listeners
+  // ── Módulo de Tema (Claro Menta <-> Oscuro Obsidian) ──
+  function initTheme() {
+    const savedTheme = localStorage.getItem('nikkodev-theme');
+    const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    
+    // Predeterminado: Modo Claro Menta salvo que el usuario haya elegido oscuro previamente
+    const isDark = savedTheme === 'dark';
+    setTheme(isDark);
+
+    dom.btnThemeToggle.addEventListener('click', () => {
+      setTheme(!state.isDark);
+    });
+  }
+
+  function setTheme(dark) {
+    state.isDark = dark;
+    if (dark) {
+      dom.root.classList.add('dark');
+      dom.iconSun.style.display = 'block';
+      dom.iconMoon.style.display = 'none';
+      localStorage.setItem('nikkodev-theme', 'dark');
+      document.querySelector('meta[name="theme-color"]')?.setAttribute('content', '#0b0d10');
+    } else {
+      dom.root.classList.remove('dark');
+      dom.iconSun.style.display = 'none';
+      dom.iconMoon.style.display = 'block';
+      localStorage.setItem('nikkodev-theme', 'light');
+      document.querySelector('meta[name="theme-color"]')?.setAttribute('content', '#F8FAFC');
+    }
+  }
+
+  // ── Módulo FX de Fondo Vivo y Linterna (NikkoDev FX Engine) ──
+  function initFX() {
+    const canvas = dom.canvasNet;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    let width = 0;
+    let height = 0;
+    let dpr = 1;
+    let nodes = [];
+    const mouse = { x: -9999, y: -9999 };
+    const finePointer = matchMedia('(hover: hover) and (pointer: fine)').matches;
+    const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    const LINK_DIST = 135;
+    const LINK_SQ = LINK_DIST * LINK_DIST;
+
+    function resize() {
+      dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+      width = window.innerWidth;
+      height = window.innerHeight;
+      canvas.width = Math.round(width * dpr);
+      canvas.height = Math.round(height * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+      const count = finePointer
+        ? Math.max(22, Math.min(50, Math.round((width * height) / 25000)))
+        : Math.max(12, Math.min(20, Math.round((width * height) / 45000)));
+
+      nodes = Array.from({ length: count }, () => ({
+        x: Math.random() * width,
+        y: Math.random() * height,
+        vx: (Math.random() - 0.5) * 0.25,
+        vy: (Math.random() - 0.5) * 0.25,
+        z: 0.4 + Math.random() * 0.8
+      }));
+    }
+
+    function render() {
+      ctx.clearRect(0, 0, width, height);
+
+      const isDark = state.isDark;
+      const pointColor = isDark ? '#34D399' : '#047857';
+      const lineAlphaBase = isDark ? 0.22 : 0.16;
+      const dotAlpha = isDark ? 0.65 : 0.45;
+
+      ctx.lineWidth = 1;
+
+      for (let i = 0; i < nodes.length; i++) {
+        const n = nodes[i];
+        if (!reduceMotion) {
+          n.x += n.vx;
+          n.y += n.vy;
+          if (n.x < -10) n.x = width + 10;
+          else if (n.x > width + 10) n.x = -10;
+          if (n.y < -10) n.y = height + 10;
+          else if (n.y > height + 10) n.y = -10;
+        }
+
+        // Dibujar punto
+        ctx.fillStyle = pointColor;
+        ctx.globalAlpha = dotAlpha * n.z;
+        ctx.beginPath();
+        ctx.arc(n.x, n.y, 1.6 * n.z, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Conectar puntos cercanos
+        for (let j = i + 1; j < nodes.length; j++) {
+          const m = nodes[j];
+          const dx = n.x - m.x;
+          const dy = n.y - m.y;
+          const distSq = dx * dx + dy * dy;
+
+          if (distSq < LINK_SQ) {
+            ctx.strokeStyle = pointColor;
+            ctx.globalAlpha = (1 - distSq / LINK_SQ) * lineAlphaBase;
+            ctx.beginPath();
+            ctx.moveTo(n.x, n.y);
+            ctx.lineTo(m.x, m.y);
+            ctx.stroke();
+          }
+        }
+      }
+
+      if (!reduceMotion) {
+        requestAnimationFrame(render);
+      }
+    }
+
+    // Linterna reactiva al cursor/toque para el grid de fondo
+    if (dom.fxBg) {
+      window.addEventListener('pointermove', (e) => {
+        mouse.x = e.clientX;
+        mouse.y = e.clientY;
+        dom.fxBg.style.setProperty('--px', `${e.clientX}px`);
+        dom.fxBg.style.setProperty('--py', `${e.clientY}px`);
+      }, { passive: true });
+    }
+
+    // Linterna perimetral para paneles de vidrio
+    dom.glassPanels.forEach((panel) => {
+      panel.addEventListener('pointermove', (e) => {
+        const rect = panel.getBoundingClientRect();
+        panel.style.setProperty('--mx', `${e.clientX - rect.left}px`);
+        panel.style.setProperty('--my', `${e.clientY - rect.top}px`);
+      }, { passive: true });
+    });
+
+    window.addEventListener('resize', resize, { passive: true });
+    resize();
+    render();
+  }
+
+  // ── Event Listeners de la Calculadora ──
   function initListeners() {
     // 1. Selector de Sector
     dom.sectorButtons.forEach((btn) => {
@@ -225,7 +379,7 @@ Me gustaría coordinar la auditoría gratuita de 30 min para evaluar qué proces
       });
     });
 
-    // 2. Personas (slider + botones)
+    // 2. Personas (slider + botones táctiles)
     dom.personasRange.addEventListener('input', (e) => {
       state.personas = parseInt(e.target.value, 10);
       dom.personasBadge.textContent = state.personas;
@@ -250,7 +404,7 @@ Me gustaría coordinar la auditoría gratuita de 30 min para evaluar qué proces
       }
     });
 
-    // 3. Horas semanales (slider + botones)
+    // 3. Horas semanales (slider + botones táctiles)
     dom.horasRange.addEventListener('input', (e) => {
       state.horas = parseInt(e.target.value, 10);
       dom.horasBadge.textContent = `${state.horas}h`;
@@ -281,7 +435,6 @@ Me gustaría coordinar la auditoría gratuita de 30 min para evaluar qué proces
       if (isNaN(val) || val <= 0) val = 12000;
       state.costoHora = val;
 
-      // Actualizar pills activas
       dom.costoPresetPills.forEach((p) => {
         p.classList.toggle('active', parseInt(p.dataset.val, 10) === val);
       });
@@ -311,7 +464,7 @@ Me gustaría coordinar la auditoría gratuita de 30 min para evaluar qué proces
           dom.inputNombre.focus();
         }, 120);
       } else {
-        dom.btnOpenLead.textContent = 'Solicitar Auditoría Gratuita →';
+        dom.btnOpenLead.textContent = 'Solicitar Auditoría Gratuita de Procesos';
       }
     });
 
@@ -345,10 +498,12 @@ Me gustaría coordinar la auditoría gratuita de 30 min para evaluar qué proces
     });
   }
 
-  // Inicialización
+  // Inicialización global
   function init() {
+    initTheme();
     initListeners();
     calculate();
+    initFX();
   }
 
   if (document.readyState === 'loading') {
