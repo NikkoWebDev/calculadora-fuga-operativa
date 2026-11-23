@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
+  <title>Calculadora de Fuga Operativa y ROI en Automatización | NikkoDev</title>
+  <meta name="description" content="Calcula cuánto dinero y horas pierde tu empresa al mes en WhatsApp repetitivo y tareas manuales. Diagnóstico en vivo para empresas de Sogamoso.">
+  <meta name="theme-color" content="#0b0d10">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+
+  <!-- OpenGraph / Social -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://calculadora.nikko.dev/">
+  <meta property="og:title" content="Calculadora de Fuga Operativa B2B | NikkoDev">
+  <meta property="og:description" content="¿Cuánto te cuesta contestar lo mismo por WhatsApp? Calcula en vivo horas y dinero recuperables para tu empresa en Boyacá.">
+
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <main class="app-container">
+    
+    <!-- Barra Superior -->
+    <header class="top-nav">
+      <a href="https://nikko.dev" target="_blank" rel="noopener noreferrer" class="brand" title="Ir a nikko.dev">
+        <div class="brand-icon">N</div>
+        <div>
+          <div class="brand-title">NikkoDev</div>
+          <div class="brand-sub">Sogamoso · Automatización & IA</div>
+        </div>
+      </a>
+      <div class="badge-live">
+        <span class="badge-dot"></span>
+        <span>En vivo · Taller</span>
+      </div>
+    </header>
+
+    <!-- Encabezado / Hero Auditorio -->
+    <section class="hero">
+      <span class="kicker">Diagnóstico Rápido B2B</span>
+      <h1 class="hero-title">
+        ¿Cuánto dinero se fuga en tu empresa por <span class="highlight">tareas manuales</span>?
+      </h1>
+      <p class="hero-desc">
+        Ajusta los controles según tu operación diaria y calcula en tiempo real las horas y el capital que tu equipo recuperaría automatizando consultas repetitivas.
+      </p>
+    </section>
+
+    <!-- Panel de Inputs de la Calculadora -->
+    <section class="glass-panel">
+      
+      <div class="panel-header">
+        <h2 class="panel-title">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="4" y="2" width="16" height="20" rx="2"></rect>
+            <line x1="8" y1="6" x2="16" y2="6"></line>
+            <line x1="16" y1="14" x2="16" y2="18"></line>
+            <path d="M16 10h.01"></path>
+            <path d="M12 10h.01"></path>
+            <path d="M8 10h.01"></path>
+            <path d="M12 14h.01"></path>
+            <path d="M8 14h.01"></path>
+            <path d="M12 18h.01"></path>
+            <path d="M8 18h.01"></path>
+          </svg>
+          1. Parámetros de tu Operación
+        </h2>
+        <span class="panel-hint">Valores en COP</span>
+      </div>
+
+      <!-- 1. Sector -->
+      <div class="control-group">
+        <label class="control-label" style="margin-bottom: 0.5rem;">
+          Sector de tu empresa / institución
+        </label>
+        
+        <div class="sector-grid" role="radiogroup" aria-label="Sector de la empresa">
+          <button type="button" class="sector-btn" data-sector="educacion" role="radio" aria-checked="false">
+            <span class="sec-icon">🎓</span>
+            <span class="sec-name">Educación</span>
+            <span class="sec-sub">Colegios / Inst.</span>
+          </button>
+          
+          <button type="button" class="sector-btn active" data-sector="industria" role="radio" aria-checked="true">
+            <span class="sec-icon">⚙️</span>
+            <span class="sec-name">Industria</span>
+            <span class="sec-sub">Ferretería / Taller</span>
+          </button>
+          
+          <button type="button" class="sector-btn" data-sector="salud" role="radio" aria-checked="false">
+            <span class="sec-icon">🩺</span>
+            <span class="sec-name">Salud</span>
+            <span class="sec-sub">IPS / Clínicas</span>
+          </button>
+          
+          <button type="button" class="sector-btn" data-sector="transporte" role="radio" aria-checked="false">
+            <span class="sec-icon">🚚</span>
+            <span class="sec-name">Transporte</span>
+            <span class="sec-sub">Carga / Logística</span>
+          </button>
+          
+          <button type="button" class="sector-btn" data-sector="comercio" role="radio" aria-checked="false">
+            <span class="sec-icon">💼</span>
+            <span class="sec-name">Comercio</span>
+            <span class="sec-sub">Servicios / Retail</span>
+          </button>
+        </div>
+
+        <!-- Microcopy contextual dinámico -->
+        <div class="sector-context-box" id="sector-context-text">
+          <strong>Industria / Ferretería:</strong> Cotizaciones en WhatsApp, consulta de existencias en bodega y remisiones manuales.
+        </div>
+      </div>
+
+      <!-- 2. Personas -->
+      <div class="control-group">
+        <div class="control-label-row">
+          <label for="personas-range" class="control-label">
+            Personas atendiendo WhatsApp / digitando
+          </label>
+          <span class="control-val-badge" id="personas-val">2</span>
+        </div>
+        
+        <div class="slider-container">
+          <button type="button" class="btn-step" id="btn-personas-minus" aria-label="Disminuir personas">−</button>
+          <input 
+            type="range" 
+            id="personas-range" 
+            class="custom-range" 
+            min="1" 
+            max="15" 
+            value="2" 
+            step="1"
+            aria-label="Cantidad de personas"
+          >
+          <button type="button" class="btn-step" id="btn-personas-plus" aria-label="Aumentar personas">+</button>
+        </div>
+        
+        <div class="slider-ticks">
+          <span>1 pers.</span>
+          <span>5 pers.</span>
+          <span>10 pers.</span>
+          <span>15 pers.</span>
+        </div>
+      </div>
+
+      <!-- 3. Horas por semana -->
+      <div class="control-group">
+        <div class="control-label-row">
+          <label for="horas-range" class="control-label">
+            Horas semanales que cada persona pierde en lo mismo
+          </label>
+          <span class="control-val-badge" id="horas-val">10h</span>
+        </div>
+        
+        <div class="slider-container">
+          <button type="button" class="btn-step" id="btn-horas-minus" aria-label="Disminuir horas">−</button>
+          <input 
+            type="range" 
+            id="horas-range" 
+            class="custom-range" 
+            min="2" 
+            max="30" 
+            value="10" 
+            step="1"
+            aria-label="Horas semanales por persona"
+          >
+          <button type="button" class="btn-step" id="btn-horas-plus" aria-label="Aumentar horas">+</button>
+        </div>
+        
+        <div class="slider-ticks">
+          <span>2h/sem (40m/día)</span>
+          <span>10h/sem (2h/día)</span>
+          <span>20h/sem</span>
+          <span>30h/sem</span>
+        </div>
+      </div>
+
+      <!-- 4. Costo promedio por hora operativa -->
+      <div class="control-group">
+        <div class="control-label-row">
+          <label for="costo-hora-input" class="control-label">
+            Costo promedio hora operativa (COP)
+          </label>
+        </div>
+        
+        <div class="cost-input-wrapper">
+          <span class="cost-input-symbol">$</span>
+          <input 
+            type="number" 
+            id="costo-hora-input" 
+            class="cost-input" 
+            value="12000" 
+            step="500" 
+            min="5000"
+            max="100000"
+            inputmode="numeric"
+          >
+        </div>
+
+        <div class="preset-pills">
+          <button type="button" class="preset-pill" data-val="10000">$10.000</button>
+          <button type="button" class="preset-pill active" data-val="12000">$12.000 (Base SMMLV + Cargas)</button>
+          <button type="button" class="preset-pill" data-val="15000">$15.000 (Auxiliar / Técnico)</button>
+          <button type="button" class="preset-pill" data-val="20000">$20.000 (Profesional)</button>
+        </div>
+
+        <small class="cost-footnote">
+          ℹ️ $12.000 COP/hora equivale a un salario mínimo legal (~$1.42M) con prestaciones, seguridad social y auxilio de transporte (~$2.1M total empresa ÷ 176h).
+        </small>
+      </div>
+
+    </section>
+
+    <!-- Panel de Resultados en Tiempo Real -->
+    <section class="results-panel">
+      
+      <div class="panel-header" style="margin-bottom: 0.8rem;">
+        <h2 class="panel-title">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+          </svg>
+          2. Diagnóstico de Impacto en Tiempo Real
+        </h2>
+      </div>
+
+      <div class="results-grid">
+        
+        <!-- Fuga Mensual -->
+        <div class="result-card">
+          <div class="result-tag">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"></circle>
+              <polyline points="12 6 12 12 16 14"></polyline>
+            </svg>
+            Fuga Operativa Mensual
+          </div>
+          <div class="result-value warning" id="res-fuga-mensual">$ 1.039.200</div>
+          <p class="result-caption">Nómina pagada directamente por responder chats y transcribir datos.</p>
+        </div>
+
+        <!-- Fuga Anual -->
+        <div class="result-card">
+          <div class="result-tag">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+            </svg>
+            Fuga Operativa Anual
+          </div>
+          <div class="result-value danger" id="res-fuga-anual">$ 12.470.400</div>
+          <p class="result-caption">Dinero que tu empresa drena al año en tareas 100% automatizables.</p>
+        </div>
+
+        <!-- Horas Recuperables -->
+        <div class="result-card full-width">
+          <div class="result-tag">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+              <polyline points="22 4 12 14.01 9 11.01"></polyline>
+            </svg>
+            Horas Recuperables al Año (70% automatizable)
+          </div>
+          <div class="result-value success" id="res-horas-recuperables">728 h</div>
+          <p class="result-caption">
+            Tiempo neto que tu equipo gana para vender más, cerrar clientes presenciales o mejorar la atención, en vez de teclear lo mismo todo el día.
+          </p>
+        </div>
+
+      </div>
+
+      <!-- Tarjeta Comparativa ROI & Payback -->
+      <div class="roi-card">
+        <div class="roi-header">
+          <div class="roi-title">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+            </svg>
+            Retorno de Inversión (ROI)
+          </div>
+          <span class="payback-badge" id="res-payback-badge">Retorno en ~2.1 meses</span>
+        </div>
+
+        <div class="roi-comparison-rows">
+          <div class="roi-col">
+            <span class="roi-col-label">Pierdes hoy al año:</span>
+            <span class="roi-col-num strike" id="res-fuga-anual-vs">$ 12.470.400</span>
+          </div>
+          <div class="roi-col">
+            <span class="roi-col-label">Sprint 14 días (única vez):</span>
+            <span class="roi-col-num inv">Desde $1.500.000</span>
+          </div>
+        </div>
+
+        <p class="roi-note" id="res-payback-text">
+          La inversión se paga sola en poco más de un mes y el resto del año representa ahorro operativo directo.
+        </p>
+      </div>
+
+      <!-- CTA Principal -->
+      <div class="cta-section">
+        <button type="button" class="btn-cta-main" id="btn-open-lead">
+          <span>Solicitar Auditoría Gratuita de Procesos</span>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+            <polyline points="12 5 19 12 12 19"></polyline>
+          </svg>
+        </button>
+        <p class="cta-subtext">Sesión de 30 minutos sin costo para identificar cuellos de botella en tu empresa.</p>
+      </div>
+
+      <!-- Mini Formulario Desplegable para Lead Calificado -->
+      <div class="lead-form-box" id="lead-form-box">
+        <div class="lead-form-header">
+          <h3 class="lead-form-title">Tus datos para preparar la sesión</h3>
+          <p class="lead-form-sub">Envía este cálculo a mi WhatsApp con 1 toque al salir del taller:</p>
+        </div>
+
+        <div class="form-grid">
+          <div class="form-field">
+            <label for="lead-nombre">Tu nombre completo</label>
+            <input type="text" id="lead-nombre" name="nombre" class="form-input" placeholder="Ej: Carlos Gómez" autocomplete="name">
+          </div>
+          <div class="form-field">
+            <label for="lead-empresa">Nombre de tu empresa</label>
+            <input type="text" id="lead-empresa" name="empresa" class="form-input" placeholder="Ej: Ferretería El Sol" autocomplete="organization">
+          </div>
+          <div class="form-field">
+            <label for="lead-cargo">Cargo en la empresa</label>
+            <input type="text" id="lead-cargo" name="cargo" class="form-input" placeholder="Ej: Gerente / Administrador">
+          </div>
+          <div class="form-field">
+            <label for="lead-whatsapp">Tu WhatsApp de contacto</label>
+            <input type="tel" id="lead-whatsapp" name="whatsapp" class="form-input" placeholder="Ej: 310 123 4567" autocomplete="tel">
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <a href="#" target="_blank" rel="noopener noreferrer" class="btn-whatsapp" id="btn-send-whatsapp">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.816 9.816 0 0 0 12.04 2zm.01 1.67c2.2 0 4.26.86 5.82 2.41a8.214 8.214 0 0 1 2.41 5.83c0 4.54-3.7 8.24-8.24 8.24-1.48 0-2.93-.4-4.2-1.15l-.3-.18-3.12.82.83-3.04-.2-.31a8.204 8.204 0 0 1-1.25-4.38c0-4.54 3.7-8.24 8.24-8.24zm4.52 11.58c-.25-.12-1.47-.72-1.7-.81-.23-.08-.39-.12-.56.12-.17.25-.64.81-.79.97-.14.17-.29.19-.54.06-.25-.12-1.05-.39-2-1.23-.74-.66-1.23-1.47-1.38-1.72-.14-.25-.02-.38.11-.5.11-.11.25-.29.37-.43.12-.14.17-.25.25-.41.08-.17.04-.31-.02-.43s-.56-1.34-.76-1.84c-.2-.48-.41-.42-.56-.43h-.48c-.17 0-.44.06-.67.31-.23.25-.88.86-.88 2.1 0 1.23.9 2.43 1.02 2.59.12.17 1.77 2.7 4.29 3.79.6.26 1.07.41 1.44.53.6.19 1.15.16 1.58.1.48-.07 1.47-.6 1.68-1.18.21-.58.21-1.07.15-1.18-.06-.12-.23-.19-.48-.31z"/>
+            </svg>
+            <span>Enviar Diagnóstico a WhatsApp de Brayan</span>
+          </a>
+
+          <div class="alt-actions">
+            <a href="#" class="btn-secondary" id="btn-send-email">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                <polyline points="22,6 12,13 2,6"></polyline>
+              </svg>
+              <span>Enviar por Correo</span>
+            </a>
+            <button type="button" class="btn-secondary" id="btn-copy-report">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+              </svg>
+              <span>Copiar Reporte</span>
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- Footer -->
+    <footer class="app-footer">
+      <p>
+        Desarrollado por <strong>Brayan (NikkoDev)</strong> · Sogamoso, Boyacá<br>
+        Automatización e Inteligencia Artificial Pragmática · <a href="https://nikko.dev" target="_blank" rel="noopener noreferrer">nikko.dev</a>
+      </p>
+    </footer>
+
+  </main>
+
+  <!-- Notificación Toast -->
+  <div class="toast" id="toast" role="status" aria-live="polite">✓ Diagnóstico copiado</div>
+
+  <script src="calculator.js"></script>
+</body>
+</html>
