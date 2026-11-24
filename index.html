@@ -3,29 +3,27 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
-  <title>Calculadora de Tiempo y Fuga Operativa en Automatización | NikkoDev</title>
-  <meta name="description" content="Calcula cuánto tiempo y nómina pierde tu empresa respondiendo lo mismo en WhatsApp. Mira cuántas jornadas laborales completas puedes recuperar al año.">
-  <meta name="theme-color" content="#F8FAFC">
+  <title>Calculadora de Tiempo & Automatización | NikkoDev</title>
+  <meta name="description" content="Calcula cuánto tiempo y nómina recupera tu empresa automatizando consultas repetitivas de WhatsApp y digitación manual.">
+  <meta name="theme-color" content="#F4FBF7">
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
 
-  <!-- OpenGraph / Social -->
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://calc.nikko.dev/">
   <meta property="og:title" content="Calculadora de Tiempo y Fuga Operativa | NikkoDev">
-  <meta property="og:description" content="¿Cuánto tiempo pierde tu equipo respondiendo lo mismo por WhatsApp? Calcula en vivo las jornadas laborales y nómina recuperables para tu empresa.">
+  <meta property="og:description" content="Descubre cuántas semanas y jornadas laborales completas recuperas al automatizar procesos repetitivos.">
 
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
-  <!-- Fondo Vivo FX de NikkoDev (Blobs + Grid + Linterna + Constelación Canvas) -->
+  <!-- Fondo Vivo FX de NikkoDev (Blobs + Grid Linterna + Constelación Canvas) -->
   <div class="fx-bg" aria-hidden="true">
     <div class="fx-blob b1"></div>
     <div class="fx-blob b2"></div>
     <div class="fx-blob b3"></div>
     <div class="fx-grid"></div>
     <canvas id="fxNet" class="fx-net"></canvas>
-    <div class="fx-vignette"></div>
   </div>
 
   <main class="app-container">
@@ -40,364 +38,282 @@
         </div>
       </a>
 
-      <div class="nav-actions">
-        <button type="button" class="theme-toggle" id="btn-theme-toggle" aria-label="Cambiar tema">
-          <svg id="theme-icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none;">
-            <circle cx="12" cy="12" r="5"></circle>
-            <line x1="12" y1="1" x2="12" y2="3"></line>
-            <line x1="12" y1="21" x2="12" y2="23"></line>
-            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
-            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
-            <line x1="1" y1="12" x2="3" y2="12"></line>
-            <line x1="21" y1="12" x2="23" y2="12"></line>
-            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
-            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
-          </svg>
-          <svg id="theme-icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
-          </svg>
-        </button>
-      </div>
+      <button type="button" class="theme-toggle" id="btn-theme-toggle" aria-label="Cambiar tema">
+        <svg id="theme-icon-sun" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none;">
+          <circle cx="12" cy="12" r="5"></circle>
+          <line x1="12" y1="1" x2="12" y2="3"></line>
+          <line x1="12" y1="21" x2="12" y2="23"></line>
+          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+          <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+          <line x1="1" y1="12" x2="3" y2="12"></line>
+          <line x1="21" y1="12" x2="23" y2="12"></line>
+          <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+          <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+        </svg>
+        <svg id="theme-icon-moon" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+        </svg>
+      </button>
     </header>
 
-    <!-- Encabezado con Enfoque en Tiempo -->
+    <!-- Hero Compacto -->
     <section class="hero">
       <h1 class="hero-title">
-        Devuélvele a tu equipo hasta el 70% del tiempo que <span class="highlight">se pierde en WhatsApp</span>
+        Devuélvele a tu equipo hasta el 70% del tiempo <span class="highlight">perdido en WhatsApp</span>
       </h1>
       <p class="hero-desc">
-        Ajusta los datos reales de tu operación y descubre cuántas horas y jornadas laborales completas al año se van respondiendo lo mismo, y cómo liberarlas con automatizaciones prácticas.
+        Ajusta los controles según tu operación y mira al instante las horas y jornadas laborales completas que tu negocio recuperaría al año.
       </p>
     </section>
 
-    <!-- Panel de Parámetros -->
-    <section class="glass-panel">
+    <!-- ═══════════════════════════════════════════════════════════════════════
+         DASHBOARD HERO: RESULTADO EN TIEMPO REAL (ARRIBA, VISIBLE SIN SCROLL)
+         ═══════════════════════════════════════════════════════════════════════ -->
+    <section class="time-hero-panel">
       
-      <div class="panel-header">
-        <h2 class="panel-title">
-          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="12" cy="12" r="10"></circle>
-            <polyline points="12 6 12 12 16 14"></polyline>
+      <div class="time-hero-top">
+        <div class="time-pill-badge">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <polyline points="20 6 9 17 4 12"></polyline>
           </svg>
-          1. Parámetros de tu Operación
-        </h2>
-        <span class="panel-hint">Valores en COP</span>
+          <span>70% Automatizable</span>
+        </div>
+        <div class="payback-tag" id="res-payback-badge">Retorno en ~2.1 meses</div>
       </div>
 
-      <!-- Sector -->
-      <div class="control-group">
-        <label class="control-label" style="margin-bottom: 0.55rem;">
-          Sector de tu empresa / institución
-        </label>
-        
-        <div class="sector-grid" role="radiogroup" aria-label="Sector de la empresa">
-          <button type="button" class="sector-btn" data-sector="educacion" role="radio" aria-checked="false">
-            <span class="sec-icon">🎓</span>
-            <span class="sec-name">Educación</span>
-            <span class="sec-sub">Colegios / Institutos</span>
-          </button>
-          
-          <button type="button" class="sector-btn active" data-sector="industria" role="radio" aria-checked="true">
-            <span class="sec-icon">⚙️</span>
-            <span class="sec-name">Industria</span>
-            <span class="sec-sub">Ferretería / Taller</span>
-          </button>
-          
-          <button type="button" class="sector-btn" data-sector="salud" role="radio" aria-checked="false">
-            <span class="sec-icon">🩺</span>
-            <span class="sec-name">Salud</span>
-            <span class="sec-sub">IPS / Consultorios</span>
-          </button>
-          
-          <button type="button" class="sector-btn" data-sector="transporte" role="radio" aria-checked="false">
-            <span class="sec-icon">🚚</span>
-            <span class="sec-name">Transporte</span>
-            <span class="sec-sub">Carga / Envíos</span>
-          </button>
-          
-          <button type="button" class="sector-btn" data-sector="comercio" role="radio" aria-checked="false">
-            <span class="sec-icon">💼</span>
-            <span class="sec-name">Comercio</span>
-            <span class="sec-sub">Servicios / Tiendas</span>
-          </button>
-        </div>
+      <div class="time-display-row">
+        <span class="time-big-number" id="res-horas-recuperables">728</span>
+        <span class="time-unit-label">horas / año recuperadas</span>
+      </div>
 
-        <!-- Microcopy contextual dinámico -->
-        <div class="sector-context-box" id="sector-context-text">
-          <strong>Industria / Ferretería:</strong> Cotizaciones por chat, pedir existencias a bodega y transcribir remisiones a mano.
+      <p class="time-headline-text" id="res-jornadas-text">
+        ⏳ Equivale a <strong>~91 jornadas laborales de 8h</strong> que tu equipo deja de quemar tecleando
+      </p>
+
+      <!-- Barra de progreso comparativa -->
+      <div class="time-gauge-track">
+        <div class="gauge-row">
+          <span class="gauge-label">Tiempo repetitivo resuelto por automatización</span>
+          <span class="gauge-pct">70% recuperable</span>
+        </div>
+        <div class="gauge-bar-bg">
+          <div class="gauge-bar-fill" id="gauge-fill"></div>
         </div>
       </div>
 
-      <!-- Personas -->
-      <div class="control-group">
-        <div class="control-label-row">
-          <label for="personas-range" class="control-label">
-            Personas atendiendo WhatsApp o digitando
-          </label>
-          <span class="control-val-badge" id="personas-val">2</span>
+      <!-- Tríada de Métricas Rápidas -->
+      <div class="metrics-strip">
+        <div class="metric-strip-card">
+          <div class="metric-strip-num" id="res-horas-semana">14 h</div>
+          <div class="metric-strip-lbl">libres por semana</div>
         </div>
-        
-        <div class="slider-container">
-          <button type="button" class="btn-step" id="btn-personas-minus" aria-label="Disminuir personas">−</button>
+        <div class="metric-strip-card">
+          <div class="metric-strip-num" id="res-horas-mes">61 h</div>
+          <div class="metric-strip-lbl">libres por mes</div>
+        </div>
+        <div class="metric-strip-card">
+          <div class="metric-strip-num" id="res-jornadas-badge">91 días</div>
+          <div class="metric-strip-lbl">jornadas ganadas</div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════════════════════
+         PANEL DE CONTROLES: COMPACTO Y ERGONÓMICO
+         ═══════════════════════════════════════════════════════════════════════ -->
+    <section class="controls-panel">
+      
+      <div class="section-legend">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="3"></circle>
+          <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+        </svg>
+        <span>Ajusta tu operación</span>
+      </div>
+
+      <!-- Sector en Pills Horizontales -->
+      <div class="sector-scroll-bar" role="radiogroup" aria-label="Sector de tu actividad">
+        <button type="button" class="sec-pill-btn" data-sector="educacion" role="radio" aria-checked="false">
+          <span>🎓</span> Educación
+        </button>
+        <button type="button" class="sec-pill-btn active" data-sector="industria" role="radio" aria-checked="true">
+          <span>⚙️</span> Industria / Ferretería
+        </button>
+        <button type="button" class="sec-pill-btn" data-sector="salud" role="radio" aria-checked="false">
+          <span>🩺</span> Salud / IPS
+        </button>
+        <button type="button" class="sec-pill-btn" data-sector="transporte" role="radio" aria-checked="false">
+          <span>🚚</span> Transporte / Carga
+        </button>
+        <button type="button" class="sec-pill-btn" data-sector="comercio" role="radio" aria-checked="false">
+          <span>💼</span> Comercio / Servicios
+        </button>
+      </div>
+
+      <div class="sec-context-callout" id="sector-context-text">
+        <strong>Industria / Ferretería:</strong> Cotizaciones por chat, pedir existencias a bodega y transcribir remisiones a mano.
+      </div>
+
+      <!-- Control 1: Personas -->
+      <div class="ctrl-row">
+        <div class="ctrl-head">
+          <span class="ctrl-title">Personas en WhatsApp o digitación</span>
+          <span class="ctrl-badge" id="personas-val">2</span>
+        </div>
+        <div class="stepper-slider-box">
+          <button type="button" class="btn-step" id="btn-personas-minus" aria-label="Menos personas">−</button>
           <input 
             type="range" 
             id="personas-range" 
-            class="custom-range" 
+            class="range-fluid" 
             min="1" 
             max="15" 
             value="2" 
             step="1"
             aria-label="Cantidad de personas"
           >
-          <button type="button" class="btn-step" id="btn-personas-plus" aria-label="Aumentar personas">+</button>
+          <button type="button" class="btn-step" id="btn-personas-plus" aria-label="Más personas">+</button>
         </div>
-        
-        <div class="slider-ticks">
-          <span>1 persona</span>
-          <span>5 personas</span>
-          <span>10 personas</span>
-          <span>15 personas</span>
+        <div class="range-marks">
+          <span>1 pers.</span>
+          <span>5 pers.</span>
+          <span>10 pers.</span>
+          <span>15 pers.</span>
         </div>
       </div>
 
-      <!-- Horas semanales -->
-      <div class="control-group">
-        <div class="control-label-row">
-          <label for="horas-range" class="control-label">
-            Horas por semana que cada persona pierde en lo mismo
-          </label>
-          <span class="control-val-badge" id="horas-val">10h</span>
+      <!-- Control 2: Horas Semanales -->
+      <div class="ctrl-row">
+        <div class="ctrl-head">
+          <span class="ctrl-title">Horas/semana perdidas por persona</span>
+          <span class="ctrl-badge" id="horas-val">10h</span>
         </div>
-        
-        <div class="slider-container">
-          <button type="button" class="btn-step" id="btn-horas-minus" aria-label="Disminuir horas">−</button>
+        <div class="stepper-slider-box">
+          <button type="button" class="btn-step" id="btn-horas-minus" aria-label="Menos horas">−</button>
           <input 
             type="range" 
             id="horas-range" 
-            class="custom-range" 
+            class="range-fluid" 
             min="2" 
             max="30" 
             value="10" 
             step="1"
             aria-label="Horas semanales por persona"
           >
-          <button type="button" class="btn-step" id="btn-horas-plus" aria-label="Aumentar horas">+</button>
+          <button type="button" class="btn-step" id="btn-horas-plus" aria-label="Más horas">+</button>
         </div>
-        
-        <div class="slider-ticks">
-          <span>2h/sem (~25 min/día)</span>
-          <span>10h/sem (~2h/día)</span>
+        <div class="range-marks">
+          <span>2h/sem (~25m/d)</span>
+          <span>10h/sem (~2h/d)</span>
           <span>20h/sem</span>
           <span>30h/sem</span>
         </div>
       </div>
 
-      <!-- Costo Hora en COP -->
-      <div class="control-group">
-        <div class="control-label-row">
-          <label for="costo-hora-input" class="control-label">
-            Costo promedio por hora del colaborador (COP)
-          </label>
+      <!-- Control 3: Costo Hora -->
+      <div class="ctrl-row">
+        <div class="ctrl-head">
+          <span class="ctrl-title">Costo hora promedio (COP)</span>
         </div>
-        
-        <div class="cost-input-wrapper">
-          <span class="cost-input-symbol">$</span>
+        <div class="cost-wrap">
+          <span class="cost-symbol">$</span>
           <input 
             type="number" 
             id="costo-hora-input" 
-            class="cost-input" 
+            class="cost-field" 
             value="12000" 
             step="500" 
-            min="5000"
+            min="5000" 
             max="100000"
             inputmode="numeric"
           >
         </div>
-
-        <div class="preset-pills">
-          <button type="button" class="preset-pill" data-val="10000">$10.000</button>
-          <button type="button" class="preset-pill active" data-val="12000">$12.000 (Base SMMLV + Cargas)</button>
-          <button type="button" class="preset-pill" data-val="15000">$15.000 (Auxiliar / Técnico)</button>
-          <button type="button" class="preset-pill" data-val="20000">$20.000 (Profesional)</button>
+        <div class="cost-chips">
+          <button type="button" class="cost-chip" data-val="10000">$10.000</button>
+          <button type="button" class="cost-chip active" data-val="12000">$12.000 (Base SMMLV)</button>
+          <button type="button" class="cost-chip" data-val="15000">$15.000 (Técnico)</button>
+          <button type="button" class="cost-chip" data-val="20000">$20.000 (Profesional)</button>
         </div>
-
-        <small class="cost-footnote">
-          💡 $12.000 COP/hora refleja un SMMLV (~$1.42M) con prestaciones, seguridad social y auxilio de transporte (~$2.1M costo real empresa ÷ 176h).
-        </small>
       </div>
 
     </section>
 
-    <!-- ═══════════════════════════════════════════════════════════════════════
-         PANEL DE RESULTADOS: PROTAGONISMO EN EL AHORRO DE TIEMPO
-         ═══════════════════════════════════════════════════════════════════════ -->
-    <section class="results-panel">
-      
-      <div class="panel-header" style="margin-bottom: 0.95rem;">
-        <h2 class="panel-title">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
-          </svg>
-          2. El Tiempo que Recuperas para tu Negocio
-        </h2>
+    <!-- Comparativa Financiera y ROI -->
+    <section class="roi-strip">
+      <div class="roi-strip-header">
+        <span class="roi-strip-title">Comparativa de Inversión y Nómina</span>
+        <span class="roi-badge-retorno" id="res-payback-badge-sec">Retorno en ~2.1 meses</span>
       </div>
-
-      <!-- Tarjeta Hero de Tiempo (Protagonista Absoluta) -->
-      <div class="time-hero-card">
-        <div class="time-badge-top">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-            <polyline points="22 4 12 14.01 9 11.01"></polyline>
-          </svg>
-          <span>70% Automatizable al Instante</span>
+      <div class="roi-cols">
+        <div class="roi-col-box">
+          <span class="roi-lbl">Nómina absorbida hoy:</span>
+          <span class="roi-sum leak" id="res-fuga-anual">$ 12.470.400</span>
         </div>
-
-        <div class="time-hero-number-row">
-          <span class="time-hero-val" id="res-horas-recuperables">728</span>
-          <span class="time-hero-unit">horas / año recuperadas</span>
-        </div>
-
-        <p class="time-hero-subtitle" id="res-jornadas-text">
-          ⏳ Equivale a <strong>~91 jornadas laborales de 8h</strong> devueltas a tu equipo
-        </p>
-
-        <!-- Comparativa Visual Antes vs Después -->
-        <div class="time-bar-compare">
-          <div class="bar-row">
-            <div class="bar-header">
-              <span class="label-before">Atención manual hoy</span>
-              <span>100% tiempo consumido</span>
-            </div>
-            <div class="bar-track">
-              <div class="bar-fill danger"></div>
-            </div>
-          </div>
-          <div class="bar-row">
-            <div class="bar-header">
-              <span class="label-after">Con automatizaciones NikkoDev</span>
-              <span>70% tiempo liberado</span>
-            </div>
-            <div class="bar-track">
-              <div class="bar-fill success"></div>
-            </div>
-          </div>
-        </div>
-
-        <!-- 3 Píldoras de Impacto Tangible -->
-        <div class="metrics-pill-grid">
-          <div class="metric-pill-box">
-            <div class="metric-pill-num" id="res-horas-semana">14 h</div>
-            <div class="metric-pill-lbl">libres por semana</div>
-          </div>
-          <div class="metric-pill-box">
-            <div class="metric-pill-num" id="res-horas-mes">61 h</div>
-            <div class="metric-pill-lbl">libres por mes</div>
-          </div>
-          <div class="metric-pill-box">
-            <div class="metric-pill-num" id="res-jornadas-badge">91 días</div>
-            <div class="metric-pill-lbl">jornadas ganadas</div>
-          </div>
+        <div class="roi-col-box">
+          <span class="roi-lbl">Sprint 14 días (pago único):</span>
+          <span class="roi-sum inv">Desde $1.500.000</span>
         </div>
       </div>
+      <p class="roi-expl" id="res-payback-text">
+        El sprint se amortiza en aproximadamente 2 meses con el tiempo ahorrado. A partir de ahí, es puro ahorro y tranquilidad para el equipo.
+      </p>
+    </section>
 
-      <!-- Franja Financiera Complementaria -->
-      <div class="financial-strip">
-        <div class="fin-card">
-          <div class="fin-tag">Nómina Mensual Dedicada</div>
-          <div class="fin-val warning" id="res-fuga-mensual">$ 1.039.200</div>
-          <p class="fin-sub">Gastado en teclear lo mismo cada mes.</p>
-        </div>
-        <div class="fin-card">
-          <div class="fin-tag">Fuga Anual Acumulada</div>
-          <div class="fin-val danger" id="res-fuga-anual">$ 12.470.400</div>
-          <p class="fin-sub">Costo invisible que tu negocio asume.</p>
-        </div>
-      </div>
+    <!-- CTA Principal -->
+    <div class="cta-main-box">
+      <button type="button" class="btn-cta-glow" id="btn-open-lead">
+        <span>Solicitar Auditoría Gratuita de Procesos</span>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <line x1="5" y1="12" x2="19" y2="12"></line>
+          <polyline points="12 5 19 12 12 19"></polyline>
+        </svg>
+      </button>
+      <p class="cta-note">30 min de revisión presencial en Sogamoso o virtual, sin compromiso.</p>
 
-      <!-- Tarjeta Comparativa ROI & Payback -->
-      <div class="roi-card">
-        <div class="roi-header">
-          <div class="roi-title">
-            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <line x1="12" y1="1" x2="12" y2="23"></line>
-              <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
-            </svg>
-            Retorno de Inversión (Sprint 14 días)
-          </div>
-          <span class="payback-badge" id="res-payback-badge">Retorno en ~2.1 meses</span>
+      <!-- Formulario Desplegable -->
+      <div class="lead-slide-box" id="lead-form-box">
+        <div class="lead-slide-head">
+          <h3 class="lead-slide-title">Tus datos para preparar la sesión</h3>
+          <p class="lead-slide-sub">Envía el diagnóstico directo a mi WhatsApp con 1 toque:</p>
         </div>
 
-        <div class="roi-comparison-rows">
-          <div class="roi-col">
-            <span class="roi-col-label">Se te va al año hoy:</span>
-            <span class="roi-col-num strike" id="res-fuga-anual-vs">$ 12.470.400</span>
-          </div>
-          <div class="roi-col">
-            <span class="roi-col-label">Sprint 14 días (pago único):</span>
-            <span class="roi-col-num inv">Desde $1.500.000</span>
-          </div>
-        </div>
-
-        <p class="roi-note" id="res-payback-text">
-          La automatización se paga sola en aproximadamente 2 meses solo con el tiempo ahorrado. A partir de ahí, es puro ahorro y tranquilidad operativa para tu gente.
-        </p>
-      </div>
-
-      <!-- CTA Principal -->
-      <div class="cta-section">
-        <button type="button" class="btn-cta-main" id="btn-open-lead">
-          <span>Solicitar Auditoría Gratuita de Procesos</span>
-          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-            <line x1="5" y1="12" x2="19" y2="12"></line>
-            <polyline points="12 5 19 12 12 19"></polyline>
-          </svg>
-        </button>
-        <p class="cta-subtext">30 minutos presenciales en Sogamoso o por videollamada para revisar tus procesos sin ningún compromiso.</p>
-      </div>
-
-      <!-- Mini Formulario Desplegable para Lead Calificado -->
-      <div class="lead-form-box" id="lead-form-box">
-        <div class="lead-form-header">
-          <h3 class="lead-form-title">Tus datos para preparar la sesión</h3>
-          <p class="lead-form-sub">Envíame el diagnóstico directo a WhatsApp con 1 toque:</p>
-        </div>
-
-        <div class="form-grid">
-          <div class="form-field">
+        <div class="lead-inputs">
+          <div class="inp-group">
             <label for="lead-nombre">Tu nombre</label>
-            <input type="text" id="lead-nombre" name="nombre" class="form-input" placeholder="Ej: Carlos Gómez" autocomplete="name">
+            <input type="text" id="lead-nombre" name="nombre" placeholder="Ej: Carlos Gómez" autocomplete="name">
           </div>
-          <div class="form-field">
-            <label for="lead-empresa">Nombre de tu empresa / entidad</label>
-            <input type="text" id="lead-empresa" name="empresa" class="form-input" placeholder="Ej: Ferretería El Sol" autocomplete="organization">
+          <div class="inp-group">
+            <label for="lead-empresa">Nombre de tu empresa</label>
+            <input type="text" id="lead-empresa" name="empresa" placeholder="Ej: Ferretería El Sol" autocomplete="organization">
           </div>
-          <div class="form-field">
+          <div class="inp-group">
             <label for="lead-cargo">Tu cargo o rol</label>
-            <input type="text" id="lead-cargo" name="cargo" class="form-input" placeholder="Ej: Gerente / Administrador">
+            <input type="text" id="lead-cargo" name="cargo" placeholder="Ej: Gerente / Administrador">
           </div>
-          <div class="form-field">
+          <div class="inp-group">
             <label for="lead-whatsapp">Tu WhatsApp</label>
-            <input type="tel" id="lead-whatsapp" name="whatsapp" class="form-input" placeholder="Ej: 310 123 4567" autocomplete="tel">
+            <input type="tel" id="lead-whatsapp" name="whatsapp" placeholder="Ej: 310 123 4567" autocomplete="tel">
           </div>
         </div>
 
-        <div class="form-actions">
-          <a href="#" target="_blank" rel="noopener noreferrer" class="btn-whatsapp" id="btn-send-whatsapp">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+        <div class="lead-actions-row">
+          <a href="#" target="_blank" rel="noopener noreferrer" class="btn-wa-direct" id="btn-send-whatsapp">
+            <svg width="19" height="19" viewBox="0 0 24 24" fill="currentColor">
               <path d="M12.04 2c-5.46 0-9.91 4.45-9.91 9.91 0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21 5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.816 9.816 0 0 0 12.04 2zm.01 1.67c2.2 0 4.26.86 5.82 2.41a8.214 8.214 0 0 1 2.41 5.83c0 4.54-3.7 8.24-8.24 8.24-1.48 0-2.93-.4-4.2-1.15l-.3-.18-3.12.82.83-3.04-.2-.31a8.204 8.204 0 0 1-1.25-4.38c0-4.54 3.7-8.24 8.24-8.24zm4.52 11.58c-.25-.12-1.47-.72-1.7-.81-.23-.08-.39-.12-.56.12-.17.25-.64.81-.79.97-.14.17-.29.19-.54.06-.25-.12-1.05-.39-2-1.23-.74-.66-1.23-1.47-1.38-1.72-.14-.25-.02-.38.11-.5.11-.11.25-.29.37-.43.12-.14.17-.25.25-.41.08-.17.04-.31-.02-.43s-.56-1.34-.76-1.84c-.2-.48-.41-.42-.56-.43h-.48c-.17 0-.44.06-.67.31-.23.25-.88.86-.88 2.1 0 1.23.9 2.43 1.02 2.59.12.17 1.77 2.7 4.29 3.79.6.26 1.07.41 1.44.53.6.19 1.15.16 1.58.1.48-.07 1.47-.6 1.68-1.18.21-.58.21-1.07.15-1.18-.06-.12-.23-.19-.48-.31z"/>
             </svg>
             <span>Enviar Diagnóstico a WhatsApp de Brayan</span>
           </a>
 
-          <div class="alt-actions">
-            <a href="#" class="btn-secondary" id="btn-send-email">
+          <div class="lead-alt-row">
+            <a href="#" class="btn-sec-act" id="btn-send-email">
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
                 <polyline points="22,6 12,13 2,6"></polyline>
               </svg>
               <span>Enviar por Correo</span>
             </a>
-            <button type="button" class="btn-secondary" id="btn-copy-report">
+            <button type="button" class="btn-sec-act" id="btn-copy-report">
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
                 <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
@@ -408,21 +324,20 @@
         </div>
 
       </div>
-
-    </section>
+    </div>
 
     <!-- Footer -->
-    <footer class="app-footer">
+    <footer class="site-footer">
       <p>
         Diseñado y desarrollado por <strong>Brayan (NikkoDev)</strong> · Sogamoso, Boyacá<br>
-        Automatización e Inteligencia Artificial Pragmática para Empresas · <a href="https://nikko.dev" target="_blank" rel="noopener noreferrer">nikko.dev</a>
+        Automatización e Inteligencia Artificial Pragmática · <a href="https://nikko.dev" target="_blank" rel="noopener noreferrer">nikko.dev</a>
       </p>
     </footer>
 
   </main>
 
   <!-- Notificación Toast -->
-  <div class="toast" id="toast" role="status" aria-live="polite">✓ Diagnóstico copiado</div>
+  <div class="toast-notice" id="toast" role="status" aria-live="polite">✓ Diagnóstico copiado</div>
 
   <script src="calculator.js"></script>
 </body>

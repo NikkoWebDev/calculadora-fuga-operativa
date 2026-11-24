@@ -45,7 +45,6 @@
     CONTACT_EMAIL: 'contacto@nikko.dev'
   };
 
-  // Estado reactivo
   const state = {
     sector: 'industria',
     personas: 2,
@@ -70,7 +69,7 @@
   // Referencias DOM
   const dom = {
     root: document.documentElement,
-    sectorButtons: document.querySelectorAll('.sector-btn'),
+    sectorButtons: document.querySelectorAll('.sec-pill-btn'),
     sectorContext: document.getElementById('sector-context-text'),
     personasRange: document.getElementById('personas-range'),
     personasBadge: document.getElementById('personas-val'),
@@ -81,18 +80,18 @@
     btnHorasMinus: document.getElementById('btn-horas-minus'),
     btnHorasPlus: document.getElementById('btn-horas-plus'),
     costoInput: document.getElementById('costo-hora-input'),
-    costoPresetPills: document.querySelectorAll('.preset-pill'),
+    costoPresetPills: document.querySelectorAll('.cost-chip'),
     // Métricas de Tiempo
     horasRecuperablesVal: document.getElementById('res-horas-recuperables'),
     jornadasText: document.getElementById('res-jornadas-text'),
     horasSemanaVal: document.getElementById('res-horas-semana'),
     horasMesVal: document.getElementById('res-horas-mes'),
     jornadasBadgeVal: document.getElementById('res-jornadas-badge'),
+    gaugeFill: document.getElementById('gauge-fill'),
     // Métricas Financieras y ROI
-    fugaMensualVal: document.getElementById('res-fuga-mensual'),
     fugaAnualVal: document.getElementById('res-fuga-anual'),
-    fugaAnualVs: document.getElementById('res-fuga-anual-vs'),
     paybackBadge: document.getElementById('res-payback-badge'),
+    paybackBadgeSec: document.getElementById('res-payback-badge-sec'),
     paybackText: document.getElementById('res-payback-text'),
     // Lead Form & CTA
     btnOpenLead: document.getElementById('btn-open-lead'),
@@ -112,10 +111,9 @@
     // FX
     fxBg: document.querySelector('.fx-bg'),
     canvasNet: document.getElementById('fxNet'),
-    glassPanels: document.querySelectorAll('.glass-panel, .results-panel')
+    glassPanels: document.querySelectorAll('.time-hero-panel, .controls-panel, .roi-strip')
   };
 
-  // Formateadores
   const currencyFormatter = new Intl.NumberFormat('es-CO', {
     style: 'currency',
     currency: 'COP',
@@ -124,8 +122,8 @@
 
   const numberFormatter = new Intl.NumberFormat('es-CO');
 
-  // Actualizador visual de track de slider (progreso en gradiente)
   function updateSliderFill(input) {
+    if (!input) return;
     const min = parseFloat(input.min) || 0;
     const max = parseFloat(input.max) || 100;
     const val = parseFloat(input.value) || 0;
@@ -134,19 +132,16 @@
     input.style.background = `linear-gradient(to right, #10B981 0%, #10B981 ${pct}%, ${trackBase} ${pct}%, ${trackBase} 100%)`;
   }
 
-  // Animación numérica suave (Interpolador)
   const currentDisplayed = {
     horasRecuperables: 728,
-    fugaMensual: 1039200,
     fugaAnual: 12470400
   };
 
   let animFrame = null;
-  function animateNumbers(targetHr, targetFm, targetFa) {
+  function animateNumbers(targetHr, targetFa) {
     const startHr = currentDisplayed.horasRecuperables;
-    const startFm = currentDisplayed.fugaMensual;
     const startFa = currentDisplayed.fugaAnual;
-    const duration = 220;
+    const duration = 240;
     const startTime = performance.now();
 
     if (animFrame) cancelAnimationFrame(animFrame);
@@ -154,22 +149,18 @@
     function step(now) {
       const elapsed = now - startTime;
       const progress = Math.min(elapsed / duration, 1);
-      const ease = 1 - Math.pow(1 - progress, 3); // ease-out cubic
+      const ease = 1 - Math.pow(1 - progress, 3);
 
       const curHr = Math.round(startHr + (targetHr - startHr) * ease);
-      const curFm = Math.round(startFm + (targetFm - startFm) * ease);
       const curFa = Math.round(startFa + (targetFa - startFa) * ease);
 
-      dom.horasRecuperablesVal.textContent = numberFormatter.format(curHr);
-      dom.fugaMensualVal.textContent = currencyFormatter.format(curFm);
-      dom.fugaAnualVal.textContent = currencyFormatter.format(curFa);
-      dom.fugaAnualVs.textContent = currencyFormatter.format(curFa);
+      if (dom.horasRecuperablesVal) dom.horasRecuperablesVal.textContent = numberFormatter.format(curHr);
+      if (dom.fugaAnualVal) dom.fugaAnualVal.textContent = currencyFormatter.format(curFa);
 
       if (progress < 1) {
         animFrame = requestAnimationFrame(step);
       } else {
         currentDisplayed.horasRecuperables = targetHr;
-        currentDisplayed.fugaMensual = targetFm;
         currentDisplayed.fugaAnual = targetFa;
       }
     }
@@ -180,20 +171,14 @@
   function calculate() {
     const { personas, horas, costoHora } = state;
 
-    // Métricas de Tiempo
-    // Horas al año recuperables (70% automatizable)
     const horasRecuperables = Math.round(personas * horas * CONSTANTS.WEEKS_PER_YEAR * CONSTANTS.AUTOMATION_EFFICIENCY);
-    // Equivalencia en jornadas laborales de 8 horas
     const jornadasGanadas = Math.round(horasRecuperables / CONSTANTS.WORK_DAY_HOURS);
-    // Horas liberadas por semana y mes para el equipo
     const horasSemana = Math.round(personas * horas * CONSTANTS.AUTOMATION_EFFICIENCY);
     const horasMes = Math.round(personas * horas * CONSTANTS.WEEKS_PER_MONTH * CONSTANTS.AUTOMATION_EFFICIENCY);
 
-    // Métricas Financieras
     const fugaMensual = Math.round(personas * horas * CONSTANTS.WEEKS_PER_MONTH * costoHora);
     const fugaAnual = Math.round(fugaMensual * 12);
 
-    // Payback Sprint $1.5M
     const ahorroMensual = fugaMensual * CONSTANTS.AUTOMATION_EFFICIENCY;
     const paybackMeses = ahorroMensual > 0 
       ? (CONSTANTS.SPRINT_INVESTMENT_COP / ahorroMensual) 
@@ -213,33 +198,38 @@
   }
 
   function updateUI() {
-    const { fugaMensual, fugaAnual, horasRecuperables, jornadasGanadas, horasSemana, horasMes, paybackMeses } = state.calc;
+    const { fugaAnual, horasRecuperables, jornadasGanadas, horasSemana, horasMes, paybackMeses } = state.calc;
 
-    // Actualizar números con animación
-    animateNumbers(horasRecuperables, fugaMensual, fugaAnual);
+    animateNumbers(horasRecuperables, fugaAnual);
 
-    // Métricas de tiempo tangibles
-    dom.jornadasText.innerHTML = `⏳ Equivale a <strong>~${numberFormatter.format(jornadasGanadas)} jornadas laborales de 8h</strong> devueltas a tu equipo`;
-    dom.horasSemanaVal.textContent = `${horasSemana} h`;
-    dom.horasMesVal.textContent = `${horasMes} h`;
-    dom.jornadasBadgeVal.textContent = `${jornadasGanadas} días`;
+    if (dom.jornadasText) {
+      dom.jornadasText.innerHTML = `⏳ Equivale a <strong>~${numberFormatter.format(jornadasGanadas)} jornadas laborales de 8h</strong> que tu equipo deja de quemar tecleando`;
+    }
+    if (dom.horasSemanaVal) dom.horasSemanaVal.textContent = `${horasSemana} h`;
+    if (dom.horasMesVal) dom.horasMesVal.textContent = `${horasMes} h`;
+    if (dom.jornadasBadgeVal) dom.jornadasBadgeVal.textContent = `${jornadasGanadas} días`;
 
-    // Sliders
     updateSliderFill(dom.personasRange);
     updateSliderFill(dom.horasRange);
 
-    // Payback
+    let paybackStr = '';
+    let paybackExpl = '';
+
     if (paybackMeses <= 0.95) {
       const dias = Math.max(14, Math.round(paybackMeses * 30));
-      dom.paybackBadge.textContent = `Retorno en ~${dias} días`;
-      dom.paybackText.textContent = `La automatización (Sprint de $1.5M COP) se amortiza en menos de un mes con el tiempo ahorrado. A partir de ahí, es puro ahorro y tranquilidad operativa.`;
+      paybackStr = `Retorno en ~${dias} días`;
+      paybackExpl = `La automatización (Sprint de $1.5M COP) se amortiza en menos de un mes con el tiempo ahorrado. A partir de ahí, es pura rentabilidad operativa.`;
     } else if (paybackMeses <= 1.25) {
-      dom.paybackBadge.textContent = `Retorno en ~1 mes`;
-      dom.paybackText.textContent = `La inversión se cubre por completo durante las primeras 4 semanas post-despliegue.`;
+      paybackStr = `Retorno en ~1 mes`;
+      paybackExpl = `La inversión se cubre por completo durante las primeras 4 semanas post-despliegue.`;
     } else {
-      dom.paybackBadge.textContent = `Retorno en ~${paybackMeses.toFixed(1)} meses`;
-      dom.paybackText.textContent = `La automatización se paga sola en aprox. ${paybackMeses.toFixed(1)} meses con el tiempo ahorrado. A partir de ahí, es puro ahorro y tranquilidad operativa para tu gente.`;
+      paybackStr = `Retorno en ~${paybackMeses.toFixed(1)} meses`;
+      paybackExpl = `La inversión se amortiza en aprox. ${paybackMeses.toFixed(1)} meses con el tiempo ahorrado. A partir de ahí, es puro ahorro y tranquilidad operativa.`;
     }
+
+    if (dom.paybackBadge) dom.paybackBadge.textContent = paybackStr;
+    if (dom.paybackBadgeSec) dom.paybackBadgeSec.textContent = paybackStr;
+    if (dom.paybackText) dom.paybackText.textContent = paybackExpl;
 
     updateContactLinks();
   }
@@ -284,13 +274,18 @@ Me interesa coordinar los 30 min de auditoría gratuita para revisar en detalle 
     const text = generateReportText();
     const encoded = encodeURIComponent(text);
 
-    dom.btnSendWhatsapp.href = `https://wa.me/${CONSTANTS.WHATSAPP_NUMBER}?text=${encoded}`;
+    if (dom.btnSendWhatsapp) {
+      dom.btnSendWhatsapp.href = `https://wa.me/${CONSTANTS.WHATSAPP_NUMBER}?text=${encoded}`;
+    }
 
     const subject = encodeURIComponent(`Auditoría de Procesos - ${state.empresa.trim() || 'Empresa'}`);
-    dom.btnSendEmail.href = `mailto:${CONSTANTS.CONTACT_EMAIL}?subject=${subject}&body=${encoded}`;
+    if (dom.btnSendEmail) {
+      dom.btnSendEmail.href = `mailto:${CONSTANTS.CONTACT_EMAIL}?subject=${subject}&body=${encoded}`;
+    }
   }
 
   function showToast(msg) {
+    if (!dom.toast) return;
     dom.toast.textContent = msg;
     dom.toast.classList.add('show');
     setTimeout(() => {
@@ -298,38 +293,38 @@ Me interesa coordinar los 30 min de auditoría gratuita para revisar en detalle 
     }, 2800);
   }
 
-  // ── Tema ──
   function initTheme() {
     const savedTheme = localStorage.getItem('nikkodev-theme');
     const isDark = savedTheme === 'dark';
     setTheme(isDark);
 
-    dom.btnThemeToggle.addEventListener('click', () => {
-      triggerHaptic();
-      setTheme(!state.isDark);
-      updateSliderFill(dom.personasRange);
-      updateSliderFill(dom.horasRange);
-    });
+    if (dom.btnThemeToggle) {
+      dom.btnThemeToggle.addEventListener('click', () => {
+        triggerHaptic();
+        setTheme(!state.isDark);
+        updateSliderFill(dom.personasRange);
+        updateSliderFill(dom.horasRange);
+      });
+    }
   }
 
   function setTheme(dark) {
     state.isDark = dark;
     if (dark) {
       dom.root.classList.add('dark');
-      dom.iconSun.style.display = 'block';
-      dom.iconMoon.style.display = 'none';
+      if (dom.iconSun) dom.iconSun.style.display = 'block';
+      if (dom.iconMoon) dom.iconMoon.style.display = 'none';
       localStorage.setItem('nikkodev-theme', 'dark');
-      document.querySelector('meta[name="theme-color"]')?.setAttribute('content', '#0b0d10');
+      document.querySelector('meta[name="theme-color"]')?.setAttribute('content', '#07090E');
     } else {
       dom.root.classList.remove('dark');
-      dom.iconSun.style.display = 'none';
-      dom.iconMoon.style.display = 'block';
+      if (dom.iconSun) dom.iconSun.style.display = 'none';
+      if (dom.iconMoon) dom.iconMoon.style.display = 'block';
       localStorage.setItem('nikkodev-theme', 'light');
-      document.querySelector('meta[name="theme-color"]')?.setAttribute('content', '#F8FAFC');
+      document.querySelector('meta[name="theme-color"]')?.setAttribute('content', '#F4FBF7');
     }
   }
 
-  // ── FX Canvas Constelación y Linterna ──
   function initFX() {
     const canvas = dom.canvasNet;
     if (!canvas) return;
@@ -356,14 +351,14 @@ Me interesa coordinar los 30 min de auditoría gratuita para revisar en detalle 
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
       const count = finePointer
-        ? Math.max(22, Math.min(50, Math.round((width * height) / 25000)))
-        : Math.max(12, Math.min(22, Math.round((width * height) / 45000)));
+        ? Math.max(20, Math.min(45, Math.round((width * height) / 26000)))
+        : Math.max(12, Math.min(20, Math.round((width * height) / 45000)));
 
       nodes = Array.from({ length: count }, () => ({
         x: Math.random() * width,
         y: Math.random() * height,
-        vx: (Math.random() - 0.5) * 0.25,
-        vy: (Math.random() - 0.5) * 0.25,
+        vx: (Math.random() - 0.5) * 0.22,
+        vy: (Math.random() - 0.5) * 0.22,
         z: 0.4 + Math.random() * 0.8
       }));
     }
@@ -439,9 +434,8 @@ Me interesa coordinar los 30 min de auditoría gratuita para revisar en detalle 
     render();
   }
 
-  // ── Event Listeners ──
   function initListeners() {
-    // 1. Sector
+    // 1. Selector de Sector en Pills
     dom.sectorButtons.forEach((btn) => {
       btn.addEventListener('click', () => {
         triggerHaptic();
@@ -450,7 +444,9 @@ Me interesa coordinar los 30 min de auditoría gratuita para revisar en detalle 
         const sectorKey = btn.dataset.sector;
         state.sector = sectorKey;
         const info = SECTORS[sectorKey];
-        dom.sectorContext.innerHTML = `<strong>${info.name}:</strong> ${info.context}`;
+        if (dom.sectorContext) {
+          dom.sectorContext.innerHTML = `<strong>${info.name}:</strong> ${info.context}`;
+        }
         calculate();
       });
     });
@@ -459,6 +455,7 @@ Me interesa coordinar los 30 min de auditoría gratuita para revisar en detalle 
     dom.personasRange.addEventListener('input', (e) => {
       state.personas = parseInt(e.target.value, 10);
       dom.personasBadge.textContent = state.personas;
+      updateSliderFill(dom.personasRange);
       calculate();
     });
 
@@ -468,6 +465,7 @@ Me interesa coordinar los 30 min de auditoría gratuita para revisar en detalle 
         state.personas -= 1;
         dom.personasRange.value = state.personas;
         dom.personasBadge.textContent = state.personas;
+        updateSliderFill(dom.personasRange);
         calculate();
       }
     });
@@ -478,6 +476,7 @@ Me interesa coordinar los 30 min de auditoría gratuita para revisar en detalle 
         state.personas += 1;
         dom.personasRange.value = state.personas;
         dom.personasBadge.textContent = state.personas;
+        updateSliderFill(dom.personasRange);
         calculate();
       }
     });
@@ -486,6 +485,7 @@ Me interesa coordinar los 30 min de auditoría gratuita para revisar en detalle 
     dom.horasRange.addEventListener('input', (e) => {
       state.horas = parseInt(e.target.value, 10);
       dom.horasBadge.textContent = `${state.horas}h`;
+      updateSliderFill(dom.horasRange);
       calculate();
     });
 
@@ -495,6 +495,7 @@ Me interesa coordinar los 30 min de auditoría gratuita para revisar en detalle 
         state.horas -= 1;
         dom.horasRange.value = state.horas;
         dom.horasBadge.textContent = `${state.horas}h`;
+        updateSliderFill(dom.horasRange);
         calculate();
       }
     });
@@ -505,6 +506,7 @@ Me interesa coordinar los 30 min de auditoría gratuita para revisar en detalle 
         state.horas += 1;
         dom.horasRange.value = state.horas;
         dom.horasBadge.textContent = `${state.horas}h`;
+        updateSliderFill(dom.horasRange);
         calculate();
       }
     });
@@ -540,13 +542,13 @@ Me interesa coordinar los 30 min de auditoría gratuita para revisar en detalle 
       const isClosed = !dom.leadFormBox.classList.contains('open');
       dom.leadFormBox.classList.toggle('open');
       if (isClosed) {
-        dom.btnOpenLead.textContent = 'Ocultar formulario de contacto ↑';
+        dom.btnOpenLead.querySelector('span').textContent = 'Ocultar formulario ↑';
         setTimeout(() => {
           dom.leadFormBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
           dom.inputNombre.focus();
         }, 120);
       } else {
-        dom.btnOpenLead.textContent = 'Solicitar Auditoría Gratuita de Procesos';
+        dom.btnOpenLead.querySelector('span').textContent = 'Solicitar Auditoría Gratuita de Procesos';
       }
     });
 
