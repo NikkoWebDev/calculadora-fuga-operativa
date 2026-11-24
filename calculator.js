@@ -9,29 +9,24 @@
 
   const SECTORS = {
     educacion: {
-      name: 'Educación (Colegios / Institutos)',
-      context: 'Matrículas, pedir notas, consultar horarios y responder 150 veces la misma pregunta de acudientes por WhatsApp.',
-      icon: '🎓'
+      name: 'Educación',
+      context: 'Matrículas, certificados, horarios y responder las mismas dudas de acudientes por WhatsApp.'
     },
     industria: {
       name: 'Industria / Ferretería',
-      context: 'Cotizaciones por chat, pedir existencias a bodega y transcribir remisiones a mano.',
-      icon: '⚙️'
+      context: 'Cotizaciones por chat, consultar existencias en bodega y pasar remisiones a mano al sistema.'
     },
     salud: {
       name: 'Salud / IPS',
-      context: 'Agendar citas, autorizaciones de EPS, llamadas de confirmación y lidiar con pacientes que no llegan.',
-      icon: '🩺'
+      context: 'Agendar citas, validar órdenes, confirmar asistencia y reprogramar pacientes por WhatsApp.'
     },
     transporte: {
-      name: 'Transporte / Logística',
-      context: 'Avisar por dónde va el camión, planillas de viaje, remisiones de carga y reportar novedades de ruta.',
-      icon: '🚚'
+      name: 'Transporte / Carga',
+      context: 'Informar ubicación de vehículos, armar planillas de despacho y registrar novedades de ruta.'
     },
     comercio: {
       name: 'Comercio / Servicios',
-      context: 'Pasar catálogo en PDF, confirmar existencias, tomar pedidos por chat y transcribirlos al sistema contable.',
-      icon: '💼'
+      context: 'Enviar precios, revisar inventario, tomar pedidos por chat y digitarlos en facturación.'
     }
   };
 
@@ -90,8 +85,7 @@
     gaugeFill: document.getElementById('gauge-fill'),
     // Métricas Financieras y ROI
     fugaAnualVal: document.getElementById('res-fuga-anual'),
-    paybackBadge: document.getElementById('res-payback-badge'),
-    paybackBadgeSec: document.getElementById('res-payback-badge-sec'),
+    paybackVal: document.getElementById('res-payback-val'),
     paybackText: document.getElementById('res-payback-text'),
     // Lead Form & CTA
     btnOpenLead: document.getElementById('btn-open-lead'),
@@ -110,8 +104,7 @@
     iconMoon: document.getElementById('theme-icon-moon'),
     // FX
     fxBg: document.querySelector('.fx-bg'),
-    canvasNet: document.getElementById('fxNet'),
-    glassPanels: document.querySelectorAll('.hero-terminal, .time-hero-box, .term-roi-box')
+    canvasNet: document.getElementById('fxNet')
   };
 
   const currencyFormatter = new Intl.NumberFormat('es-CO', {
@@ -203,7 +196,7 @@
     animateNumbers(horasRecuperables, fugaAnual);
 
     if (dom.jornadasText) {
-      dom.jornadasText.innerHTML = `⏳ Equivale a <strong>~${numberFormatter.format(jornadasGanadas)} jornadas laborales de 8h</strong> que tu equipo deja de quemar tecleando`;
+      dom.jornadasText.innerHTML = `Equivale a <strong>~${numberFormatter.format(jornadasGanadas)} jornadas laborales de 8h</strong> que tu equipo deja de quemar tecleando.`;
     }
     if (dom.horasSemanaVal) dom.horasSemanaVal.textContent = `${horasSemana} h`;
     if (dom.horasMesVal) dom.horasMesVal.textContent = `${horasMes} h`;
@@ -217,18 +210,17 @@
 
     if (paybackMeses <= 0.95) {
       const dias = Math.max(14, Math.round(paybackMeses * 30));
-      paybackStr = `Retorno en ~${dias} días`;
-      paybackExpl = `La automatización (Sprint de $1.5M COP) se amortiza en menos de un mes con el tiempo ahorrado. A partir de ahí, es pura rentabilidad operativa.`;
+      paybackStr = `~${dias} días`;
+      paybackExpl = 'El sprint de $1.5M COP se cubre en menos de un mes con el tiempo que deja de perder tu equipo.';
     } else if (paybackMeses <= 1.25) {
-      paybackStr = `Retorno en ~1 mes`;
-      paybackExpl = `La inversión se cubre por completo durante las primeras 4 semanas post-despliegue.`;
+      paybackStr = '~1 mes';
+      paybackExpl = 'El sprint de $1.5M COP se cubre durante el primer mes con el tiempo que deja de perder tu equipo.';
     } else {
-      paybackStr = `Retorno en ~${paybackMeses.toFixed(1)} meses`;
-      paybackExpl = `La inversión se amortiza en aprox. ${paybackMeses.toFixed(1)} meses con el tiempo ahorrado. A partir de ahí, es puro ahorro y tranquilidad operativa.`;
+      paybackStr = `~${paybackMeses.toFixed(1)} meses`;
+      paybackExpl = `El sprint de $1.5M COP se cubre en ~${paybackMeses.toFixed(1)} meses con el tiempo que deja de perder tu equipo.`;
     }
 
-    if (dom.paybackBadge) dom.paybackBadge.textContent = paybackStr;
-    if (dom.paybackBadgeSec) dom.paybackBadgeSec.textContent = paybackStr;
+    if (dom.paybackVal) dom.paybackVal.textContent = paybackStr;
     if (dom.paybackText) dom.paybackText.textContent = paybackExpl;
 
     updateContactLinks();
@@ -250,24 +242,16 @@
 
     const paybackStr = paybackMeses <= 1 ? 'menos de 1 mes' : `${paybackMeses.toFixed(1)} meses`;
 
-    return `Hola Brayan, calculé el impacto de automatización para mi empresa:
+    return `Hola Brayan, hice el cálculo en calc.nikko.dev para mi empresa:
 
-📋 MI OPERACIÓN
-• Sector: ${sec.name}
-• Empresa: ${empresa}
-• Contacto: ${nombre} (${cargo})${tel ? `\n• WhatsApp: ${tel}` : ''}
+- Sector: ${sec.name}
+- Empresa: ${empresa}
+- Contacto: ${nombre} (${cargo})${tel ? `\n- WhatsApp: ${tel}` : ''}
+- Tiempo recuperable: ${numberFormatter.format(horasRecuperables)} horas/año (~${numberFormatter.format(jornadasGanadas)} jornadas de 8h, unas ${horasSemana}h por semana)
+- Costo operativo actual en esas tareas: ${currencyFormatter.format(fugaMensual)} COP/mes (${currencyFormatter.format(fugaAnual)} COP/año)
+- Recuperación estimada del sprint ($1.5M): ${paybackStr}
 
-⏳ TIEMPO QUE PODRÍAMOS RECUPERAR (70% automatizable)
-• Horas al año devueltas al equipo: ${numberFormatter.format(horasRecuperables)} horas
-• Equivalente en jornadas laborales de 8h: ~${numberFormatter.format(jornadasGanadas)} días completos de trabajo
-• Tiempo liberado por semana: ~${horasSemana} horas libres
-
-💰 IMPACTO ECONÓMICO ESTIMADO
-• Nómina dedicada a tareas repetitivas: ${currencyFormatter.format(fugaMensual)} COP/mes
-• Fuga anual acumulada: ${currencyFormatter.format(fugaAnual)} COP/año
-• Retorno estimado de automatización (Sprint $1.5M): ${paybackStr}
-
-Me interesa coordinar los 30 min de auditoría gratuita para revisar en detalle mis procesos y ver por dónde conviene empezar.`;
+Quiero agendar la auditoría gratuita de 30 min para revisar qué procesos podemos automatizar primero.`;
   }
 
   function updateContactLinks() {
@@ -426,14 +410,6 @@ Me interesa coordinar los 30 min de auditoría gratuita para revisar en detalle 
       }, { passive: true });
     }
 
-    dom.glassPanels.forEach((panel) => {
-      panel.addEventListener('pointermove', (e) => {
-        const rect = panel.getBoundingClientRect();
-        panel.style.setProperty('--mx', `${e.clientX - rect.left}px`);
-        panel.style.setProperty('--my', `${e.clientY - rect.top}px`);
-      }, { passive: true });
-    });
-
     window.addEventListener('resize', resize, { passive: true });
     resize();
     render();
@@ -444,8 +420,12 @@ Me interesa coordinar los 30 min de auditoría gratuita para revisar en detalle 
     dom.sectorButtons.forEach((btn) => {
       btn.addEventListener('click', () => {
         triggerHaptic();
-        dom.sectorButtons.forEach((b) => b.classList.remove('active'));
+        dom.sectorButtons.forEach((b) => {
+          b.classList.remove('active');
+          b.setAttribute('aria-checked', 'false');
+        });
         btn.classList.add('active');
+        btn.setAttribute('aria-checked', 'true');
         const sectorKey = btn.dataset.sector;
         state.sector = sectorKey;
         const info = SECTORS[sectorKey];
@@ -547,13 +527,13 @@ Me interesa coordinar los 30 min de auditoría gratuita para revisar en detalle 
       const isClosed = !dom.leadFormBox.classList.contains('open');
       dom.leadFormBox.classList.toggle('open');
       if (isClosed) {
-        dom.btnOpenLead.querySelector('span').textContent = 'Ocultar formulario ↑';
+        dom.btnOpenLead.querySelector('span').textContent = 'Ocultar formulario';
         setTimeout(() => {
           dom.leadFormBox.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
           dom.inputNombre.focus();
         }, 120);
       } else {
-        dom.btnOpenLead.querySelector('span').textContent = 'Solicitar Auditoría Gratuita de Procesos';
+        dom.btnOpenLead.querySelector('span').textContent = 'Solicitar Auditoría Gratuita';
       }
     });
 
@@ -588,32 +568,11 @@ Me interesa coordinar los 30 min de auditoría gratuita para revisar en detalle 
     });
   }
 
-  function initTilt() {
-    const card = document.getElementById('heroTerminal');
-    if (!card) return;
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    if (window.matchMedia('(pointer: coarse)').matches) return;
-    let raf = 0;
-    card.addEventListener('mousemove', (e) => {
-      cancelAnimationFrame(raf);
-      raf = requestAnimationFrame(() => {
-        const r = card.getBoundingClientRect();
-        const x = (e.clientX - r.left) / r.width - 0.5;
-        const y = (e.clientY - r.top) / r.height - 0.5;
-        card.style.transform = `perspective(900px) rotateY(${x * 6}deg) rotateX(${-y * 6}deg) translateY(-2px)`;
-      });
-    });
-    card.addEventListener('mouseleave', () => {
-      card.style.transform = '';
-    });
-  }
-
   function init() {
     initTheme();
     initListeners();
     calculate();
     initFX();
-    initTilt();
   }
 
   if (document.readyState === 'loading') {

@@ -67,13 +67,6 @@
 
     <!-- Header Hero -->
     <header class="hero-header">
-      <div class="hero-status">
-        <span class="pulse-dot"></span>
-        <span>Auditoría de Procesos</span>
-        <span class="status-sep">·</span>
-        <span class="mono-dim">$ nikko calc --target=tiempo</span>
-      </div>
-
       <h1 class="hero-title">
         Recupera hasta el 70% del tiempo <span class="gradient-text">perdido en WhatsApp y digitación</span>
       </h1>
@@ -86,46 +79,24 @@
          VENTANA TERMINAL IDE NIKKODEV (hero-terminal)
          ═══════════════════════════════════════════════════════════════════════ -->
     <div class="hero-terminal" id="heroTerminal">
-      
-      <!-- Barra Superior estilo macOS Terminal -->
-      <div class="term-titlebar">
-        <span class="term-dots" aria-hidden="true">
-          <i></i><i></i><i></i>
-        </span>
-        <span class="term-path">nikko@ops: ~/diagnostico-tiempo</span>
-        <span class="term-live">
-          <span class="pulse-dot"></span>LIVE
-        </span>
-      </div>
-
       <div class="term-body">
         
         <!-- ── PANEL DE TIEMPO HERO (Métrica Principal Arriba, Visible Sin Scroll) ── -->
         <section class="time-hero-box" aria-label="Resultados de tiempo en vivo">
-          <div class="time-hero-badge-row">
-            <div class="time-pill-clean">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                <polyline points="20 6 9 17 4 12"></polyline>
-              </svg>
-              <span>70% Automatizable</span>
-            </div>
-            <div class="time-payback-tag" id="res-payback-badge">Retorno en ~2.1 meses</div>
-          </div>
-
           <div class="time-big-value-wrap">
             <span class="time-big-num" id="res-horas-recuperables">728</span>
             <span class="time-big-lbl">horas / año recuperadas</span>
           </div>
 
           <p class="time-statement" id="res-jornadas-text">
-            ⏳ Equivale a <strong>~91 jornadas laborales de 8h</strong> que tu equipo deja de quemar tecleando
+            Equivale a <strong>~91 jornadas laborales de 8h</strong> que tu equipo deja de quemar tecleando.
           </p>
 
           <!-- Barra de Progreso Gauge -->
           <div class="gauge-box">
             <div class="gauge-head">
-              <span>Carga operativa absorbible por software</span>
-              <span>70% recuperable</span>
+              <span>Tiempo repetitivo automatizable</span>
+              <span>70%</span>
             </div>
             <div class="gauge-track-line">
               <div class="gauge-fill-active" id="gauge-fill" style="width: 70%;"></div>
@@ -152,35 +123,27 @@
         <!-- ── CONTROLES TÁCTILES DEL TERMINAL ── -->
         <section class="term-controls-section" aria-label="Controles de operación">
           
-          <!-- 1. Sector en Pastillas Horizontales -->
+          <!-- Sector en Pastillas Horizontales -->
           <div class="control-slider-group">
-            <div class="control-block-label">1. Sector de tu empresa</div>
+            <div class="slider-info-bar">
+              <span class="slider-label-text">Sector de tu empresa</span>
+            </div>
             <div class="sector-pills-wrap" role="radiogroup" aria-label="Sector de tu actividad">
-              <button type="button" class="sec-chip" data-sector="educacion" role="radio" aria-checked="false">
-                <span>🎓</span> Educación
-              </button>
-              <button type="button" class="sec-chip active" data-sector="industria" role="radio" aria-checked="true">
-                <span>⚙️</span> Industria / Ferretería
-              </button>
-              <button type="button" class="sec-chip" data-sector="salud" role="radio" aria-checked="false">
-                <span>🩺</span> Salud / IPS
-              </button>
-              <button type="button" class="sec-chip" data-sector="transporte" role="radio" aria-checked="false">
-                <span>🚚</span> Transporte / Carga
-              </button>
-              <button type="button" class="sec-chip" data-sector="comercio" role="radio" aria-checked="false">
-                <span>💼</span> Comercio / Servicios
-              </button>
+              <button type="button" class="sec-chip" data-sector="educacion" role="radio" aria-checked="false">Educación</button>
+              <button type="button" class="sec-chip active" data-sector="industria" role="radio" aria-checked="true">Industria / Ferretería</button>
+              <button type="button" class="sec-chip" data-sector="salud" role="radio" aria-checked="false">Salud / IPS</button>
+              <button type="button" class="sec-chip" data-sector="transporte" role="radio" aria-checked="false">Transporte / Carga</button>
+              <button type="button" class="sec-chip" data-sector="comercio" role="radio" aria-checked="false">Comercio / Servicios</button>
             </div>
             <div class="sec-hint-text" id="sector-context-text">
-              <strong>Industria / Ferretería:</strong> Cotizaciones por chat, pedir existencias a bodega y transcribir remisiones a mano.
+              <strong>Industria / Ferretería:</strong> Cotizaciones por chat, consultar existencias en bodega y pasar remisiones a mano al sistema.
             </div>
           </div>
 
-          <!-- 2. Slider Personas -->
+          <!-- Slider Personas -->
           <div class="control-slider-group">
             <div class="slider-info-bar">
-              <span class="slider-label-text">2. Personas en WhatsApp o digitación manual</span>
+              <span class="slider-label-text">Personas en WhatsApp o digitación manual</span>
               <span class="slider-value-pill" id="personas-val">2</span>
             </div>
             <div class="slider-track-wrap">
@@ -205,10 +168,10 @@
             </div>
           </div>
 
-          <!-- 3. Slider Horas Semanales -->
+          <!-- Slider Horas Semanales -->
           <div class="control-slider-group">
             <div class="slider-info-bar">
-              <span class="slider-label-text">3. Horas por semana perdidas por persona</span>
+              <span class="slider-label-text">Horas por semana perdidas por persona</span>
               <span class="slider-value-pill" id="horas-val">10h</span>
             </div>
             <div class="slider-track-wrap">
@@ -233,10 +196,10 @@
             </div>
           </div>
 
-          <!-- 4. Costo Promedio por Hora -->
+          <!-- Costo Promedio por Hora -->
           <div class="control-slider-group">
             <div class="slider-info-bar">
-              <span class="slider-label-text">4. Costo promedio por hora operativa (COP)</span>
+              <span class="slider-label-text">Costo promedio por hora operativa (COP)</span>
             </div>
             <div class="cost-entry-box">
               <span class="cost-entry-symbol">$</span>
@@ -265,16 +228,20 @@
         <section class="term-roi-box" aria-label="Comparativa de retorno de inversión">
           <div class="term-roi-grid">
             <div class="roi-metric-col">
-              <span class="roi-metric-tag">Nómina absorbida hoy:</span>
+              <span class="roi-metric-tag">Lo que pierdes al año hoy</span>
               <span class="roi-metric-val leak" id="res-fuga-anual">$ 12.470.400</span>
             </div>
             <div class="roi-metric-col">
-              <span class="roi-metric-tag">Sprint 14 días (pago único):</span>
+              <span class="roi-metric-tag">Sprint 14 días (pago único)</span>
               <span class="roi-metric-val inv">Desde $1.500.000</span>
             </div>
           </div>
+          <div class="roi-payback-row">
+            <span>Tiempo estimado de recuperación</span>
+            <strong id="res-payback-val">~2.1 meses</strong>
+          </div>
           <p class="term-roi-explain" id="res-payback-text">
-            El sprint se amortiza en aproximadamente 2.1 meses con el tiempo ahorrado. A partir de ahí, es puro ahorro y tranquilidad operativa.
+            El sprint de $1.5M COP se cubre en ~2.1 meses con el tiempo que deja de perder tu equipo.
           </p>
         </section>
 
@@ -284,7 +251,7 @@
             <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
               <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
             </svg>
-            <span>Solicitar Auditoría Gratuita de Procesos</span>
+            <span>Solicitar Auditoría Gratuita</span>
           </button>
           <p class="cta-helper-note">Revisión de 30 min presencial en Sogamoso o virtual · Sin costo</p>
 
