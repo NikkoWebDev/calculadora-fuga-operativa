@@ -1,13 +1,12 @@
 /**
- * Calculadora de Fuga Operativa y Retorno de Automatización
- * FX Engine & Runtime inspirado en NikkoDev OS
- * 0 dependencias · Ultraligero · Mobile-First
+ * Calculadora de Tiempo y Fuga Operativa
+ * Diseñada para NikkoDev OS · calc.nikko.dev
+ * Enfoque en ahorro de tiempo, jornadas laborales y ROI pragmático
  */
 
 (function () {
   'use strict';
 
-  // Configuración y datos contextuales por sector
   const SECTORS = {
     educacion: {
       name: 'Educación (Colegios / Institutos)',
@@ -40,6 +39,7 @@
     WEEKS_PER_MONTH: 4.33,
     WEEKS_PER_YEAR: 52,
     AUTOMATION_EFFICIENCY: 0.70, // 70% recuperable
+    WORK_DAY_HOURS: 8,
     SPRINT_INVESTMENT_COP: 1500000,
     WHATSAPP_NUMBER: '573136638097',
     CONTACT_EMAIL: 'contacto@nikko.dev'
@@ -60,6 +60,9 @@
       fugaMensual: 0,
       fugaAnual: 0,
       horasRecuperables: 0,
+      jornadasGanadas: 0,
+      horasSemana: 0,
+      horasMes: 0,
       paybackMeses: 0
     }
   };
@@ -79,10 +82,15 @@
     btnHorasPlus: document.getElementById('btn-horas-plus'),
     costoInput: document.getElementById('costo-hora-input'),
     costoPresetPills: document.querySelectorAll('.preset-pill'),
-    // Resultados
+    // Métricas de Tiempo
+    horasRecuperablesVal: document.getElementById('res-horas-recuperables'),
+    jornadasText: document.getElementById('res-jornadas-text'),
+    horasSemanaVal: document.getElementById('res-horas-semana'),
+    horasMesVal: document.getElementById('res-horas-mes'),
+    jornadasBadgeVal: document.getElementById('res-jornadas-badge'),
+    // Métricas Financieras y ROI
     fugaMensualVal: document.getElementById('res-fuga-mensual'),
     fugaAnualVal: document.getElementById('res-fuga-anual'),
-    horasRecuperablesVal: document.getElementById('res-horas-recuperables'),
     fugaAnualVs: document.getElementById('res-fuga-anual-vs'),
     paybackBadge: document.getElementById('res-payback-badge'),
     paybackText: document.getElementById('res-payback-text'),
@@ -107,7 +115,7 @@
     glassPanels: document.querySelectorAll('.glass-panel, .results-panel')
   };
 
-  // Formateadores de moneda colombiana
+  // Formateadores
   const currencyFormatter = new Intl.NumberFormat('es-CO', {
     style: 'currency',
     currency: 'COP',
@@ -116,28 +124,88 @@
 
   const numberFormatter = new Intl.NumberFormat('es-CO');
 
+  // Actualizador visual de track de slider (progreso en gradiente)
+  function updateSliderFill(input) {
+    const min = parseFloat(input.min) || 0;
+    const max = parseFloat(input.max) || 100;
+    const val = parseFloat(input.value) || 0;
+    const pct = ((val - min) / (max - min)) * 100;
+    const trackBase = state.isDark ? 'rgba(255, 255, 255, 0.12)' : 'rgba(15, 23, 42, 0.1)';
+    input.style.background = `linear-gradient(to right, #10B981 0%, #10B981 ${pct}%, ${trackBase} ${pct}%, ${trackBase} 100%)`;
+  }
+
+  // Animación numérica suave (Interpolador)
+  const currentDisplayed = {
+    horasRecuperables: 728,
+    fugaMensual: 1039200,
+    fugaAnual: 12470400
+  };
+
+  let animFrame = null;
+  function animateNumbers(targetHr, targetFm, targetFa) {
+    const startHr = currentDisplayed.horasRecuperables;
+    const startFm = currentDisplayed.fugaMensual;
+    const startFa = currentDisplayed.fugaAnual;
+    const duration = 220;
+    const startTime = performance.now();
+
+    if (animFrame) cancelAnimationFrame(animFrame);
+
+    function step(now) {
+      const elapsed = now - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      const ease = 1 - Math.pow(1 - progress, 3); // ease-out cubic
+
+      const curHr = Math.round(startHr + (targetHr - startHr) * ease);
+      const curFm = Math.round(startFm + (targetFm - startFm) * ease);
+      const curFa = Math.round(startFa + (targetFa - startFa) * ease);
+
+      dom.horasRecuperablesVal.textContent = numberFormatter.format(curHr);
+      dom.fugaMensualVal.textContent = currencyFormatter.format(curFm);
+      dom.fugaAnualVal.textContent = currencyFormatter.format(curFa);
+      dom.fugaAnualVs.textContent = currencyFormatter.format(curFa);
+
+      if (progress < 1) {
+        animFrame = requestAnimationFrame(step);
+      } else {
+        currentDisplayed.horasRecuperables = targetHr;
+        currentDisplayed.fugaMensual = targetFm;
+        currentDisplayed.fugaAnual = targetFa;
+      }
+    }
+
+    animFrame = requestAnimationFrame(step);
+  }
+
   function calculate() {
     const { personas, horas, costoHora } = state;
 
-    // Fuga Operativa Mensual (COP) = personas × horas_semanales × 4.33 × costo_hora
-    const fugaMensual = Math.round(personas * horas * CONSTANTS.WEEKS_PER_MONTH * costoHora);
+    // Métricas de Tiempo
+    // Horas al año recuperables (70% automatizable)
+    const horasRecuperables = Math.round(personas * horas * CONSTANTS.WEEKS_PER_YEAR * CONSTANTS.AUTOMATION_EFFICIENCY);
+    // Equivalencia en jornadas laborales de 8 horas
+    const jornadasGanadas = Math.round(horasRecuperables / CONSTANTS.WORK_DAY_HOURS);
+    // Horas liberadas por semana y mes para el equipo
+    const horasSemana = Math.round(personas * horas * CONSTANTS.AUTOMATION_EFFICIENCY);
+    const horasMes = Math.round(personas * horas * CONSTANTS.WEEKS_PER_MONTH * CONSTANTS.AUTOMATION_EFFICIENCY);
 
-    // Fuga Operativa Anual (COP) = Fuga Mensual × 12
+    // Métricas Financieras
+    const fugaMensual = Math.round(personas * horas * CONSTANTS.WEEKS_PER_MONTH * costoHora);
     const fugaAnual = Math.round(fugaMensual * 12);
 
-    // Horas recuperables al año (asumiendo 70% de automatización de tareas repetitivas)
-    const horasRecuperables = Math.round(personas * horas * CONSTANTS.WEEKS_PER_YEAR * CONSTANTS.AUTOMATION_EFFICIENCY);
-
-    // Payback = 1.500.000 / (Fuga Mensual × 0.70)
-    const ahorroMensualEstimado = fugaMensual * CONSTANTS.AUTOMATION_EFFICIENCY;
-    const paybackMeses = ahorroMensualEstimado > 0 
-      ? (CONSTANTS.SPRINT_INVESTMENT_COP / ahorroMensualEstimado) 
+    // Payback Sprint $1.5M
+    const ahorroMensual = fugaMensual * CONSTANTS.AUTOMATION_EFFICIENCY;
+    const paybackMeses = ahorroMensual > 0 
+      ? (CONSTANTS.SPRINT_INVESTMENT_COP / ahorroMensual) 
       : 99;
 
     state.calc = {
       fugaMensual,
       fugaAnual,
       horasRecuperables,
+      jornadasGanadas,
+      horasSemana,
+      horasMes,
       paybackMeses
     };
 
@@ -145,69 +213,80 @@
   }
 
   function updateUI() {
-    const { fugaMensual, fugaAnual, horasRecuperables, paybackMeses } = state.calc;
+    const { fugaMensual, fugaAnual, horasRecuperables, jornadasGanadas, horasSemana, horasMes, paybackMeses } = state.calc;
 
-    dom.fugaMensualVal.textContent = currencyFormatter.format(fugaMensual);
-    dom.fugaAnualVal.textContent = currencyFormatter.format(fugaAnual);
-    dom.horasRecuperablesVal.textContent = `${numberFormatter.format(horasRecuperables)} h`;
-    dom.fugaAnualVs.textContent = currencyFormatter.format(fugaAnual);
+    // Actualizar números con animación
+    animateNumbers(horasRecuperables, fugaMensual, fugaAnual);
 
-    // Payback humanizado
+    // Métricas de tiempo tangibles
+    dom.jornadasText.innerHTML = `⏳ Equivale a <strong>~${numberFormatter.format(jornadasGanadas)} jornadas laborales de 8h</strong> devueltas a tu equipo`;
+    dom.horasSemanaVal.textContent = `${horasSemana} h`;
+    dom.horasMesVal.textContent = `${horasMes} h`;
+    dom.jornadasBadgeVal.textContent = `${jornadasGanadas} días`;
+
+    // Sliders
+    updateSliderFill(dom.personasRange);
+    updateSliderFill(dom.horasRange);
+
+    // Payback
     if (paybackMeses <= 0.95) {
       const dias = Math.max(14, Math.round(paybackMeses * 30));
       dom.paybackBadge.textContent = `Retorno en ~${dias} días`;
-      dom.paybackText.textContent = `La automatización (Sprint de $1.5M COP) se amortiza en menos de un mes con el tiempo ahorrado. A partir de ahí, es pura rentabilidad.`;
+      dom.paybackText.textContent = `La automatización (Sprint de $1.5M COP) se amortiza en menos de un mes con el tiempo ahorrado. A partir de ahí, es puro ahorro y tranquilidad operativa.`;
     } else if (paybackMeses <= 1.25) {
       dom.paybackBadge.textContent = `Retorno en ~1 mes`;
       dom.paybackText.textContent = `La inversión se cubre por completo durante las primeras 4 semanas post-despliegue.`;
     } else {
       dom.paybackBadge.textContent = `Retorno en ~${paybackMeses.toFixed(1)} meses`;
-      dom.paybackText.textContent = `La automatización se paga sola en aprox. ${paybackMeses.toFixed(1)} meses con el tiempo ahorrado. A partir de ahí, es pura rentabilidad y tranquilidad para el equipo.`;
+      dom.paybackText.textContent = `La automatización se paga sola en aprox. ${paybackMeses.toFixed(1)} meses con el tiempo ahorrado. A partir de ahí, es puro ahorro y tranquilidad operativa para tu gente.`;
     }
 
     updateContactLinks();
   }
 
+  function triggerHaptic() {
+    if (navigator.vibrate) {
+      try { navigator.vibrate(8); } catch (e) {}
+    }
+  }
+
   function generateReportText() {
     const sec = SECTORS[state.sector] || SECTORS.industria;
-    const { fugaMensual, fugaAnual, horasRecuperables, paybackMeses } = state.calc;
+    const { fugaMensual, fugaAnual, horasRecuperables, jornadasGanadas, horasSemana, paybackMeses } = state.calc;
     const nombre = state.nombre.trim() || 'No especificado';
-    const empresa = state.empresa.trim() || 'Empresa en Sogamoso';
-    const cargo = state.cargo.trim() || 'Líder / Directivo';
+    const empresa = state.empresa.trim() || 'Mi empresa';
+    const cargo = state.cargo.trim() || 'Directivo / Líder';
     const tel = state.whatsapp.trim() || '';
 
     const paybackStr = paybackMeses <= 1 ? 'menos de 1 mes' : `${paybackMeses.toFixed(1)} meses`;
 
-    return `Hola Brayan, estuve en tu taller en Sogamoso.
+    return `Hola Brayan, calculé el impacto de automatización para mi empresa:
 
-Hice el cálculo de mi empresa en la calculadora y estos fueron los resultados:
-
-📋 DATOS DE MI OPERACIÓN
+📋 MI OPERACIÓN
 • Sector: ${sec.name}
 • Empresa: ${empresa}
 • Contacto: ${nombre} (${cargo})${tel ? `\n• WhatsApp: ${tel}` : ''}
 
-📊 RESULTADOS ESTIMADOS
-• Personas en atención manual / WhatsApp: ${state.personas}
-• Horas dedicadas a consultas repetitivas: ${state.horas}h/semana por persona
-• Costo hora promedio: ${currencyFormatter.format(state.costoHora)} COP
-• Costo mensual de la atención manual: ${currencyFormatter.format(fugaMensual)} COP
-• Costo anual acumulado: ${currencyFormatter.format(fugaAnual)} COP
-• Horas recuperables al año: ${numberFormatter.format(horasRecuperables)} horas (70% automatizable)
+⏳ TIEMPO QUE PODRÍAMOS RECUPERAR (70% automatizable)
+• Horas al año devueltas al equipo: ${numberFormatter.format(horasRecuperables)} horas
+• Equivalente en jornadas laborales de 8h: ~${numberFormatter.format(jornadasGanadas)} días completos de trabajo
+• Tiempo liberado por semana: ~${horasSemana} horas libres
+
+💰 IMPACTO ECONÓMICO ESTIMADO
+• Nómina dedicada a tareas repetitivas: ${currencyFormatter.format(fugaMensual)} COP/mes
+• Fuga anual acumulada: ${currencyFormatter.format(fugaAnual)} COP/año
 • Retorno estimado de automatización (Sprint $1.5M): ${paybackStr}
 
-Me interesa coordinar los 30 minutos de auditoría gratuita para revisar en detalle mis procesos y ver por dónde conviene empezar.`;
+Me interesa coordinar los 30 min de auditoría gratuita para revisar en detalle mis procesos y ver por dónde conviene empezar.`;
   }
 
   function updateContactLinks() {
     const text = generateReportText();
     const encoded = encodeURIComponent(text);
 
-    // WhatsApp
     dom.btnSendWhatsapp.href = `https://wa.me/${CONSTANTS.WHATSAPP_NUMBER}?text=${encoded}`;
 
-    // Email
-    const subject = encodeURIComponent(`Auditoría de Procesos - ${state.empresa.trim() || 'Sogamoso'}`);
+    const subject = encodeURIComponent(`Auditoría de Procesos - ${state.empresa.trim() || 'Empresa'}`);
     dom.btnSendEmail.href = `mailto:${CONSTANTS.CONTACT_EMAIL}?subject=${subject}&body=${encoded}`;
   }
 
@@ -219,17 +298,17 @@ Me interesa coordinar los 30 minutos de auditoría gratuita para revisar en deta
     }, 2800);
   }
 
-  // ── Módulo de Tema (Claro Menta <-> Oscuro Obsidian) ──
+  // ── Tema ──
   function initTheme() {
     const savedTheme = localStorage.getItem('nikkodev-theme');
-    const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-    
-    // Predeterminado: Modo Claro Menta salvo que el usuario haya elegido oscuro previamente
     const isDark = savedTheme === 'dark';
     setTheme(isDark);
 
     dom.btnThemeToggle.addEventListener('click', () => {
+      triggerHaptic();
       setTheme(!state.isDark);
+      updateSliderFill(dom.personasRange);
+      updateSliderFill(dom.horasRange);
     });
   }
 
@@ -250,7 +329,7 @@ Me interesa coordinar los 30 minutos de auditoría gratuita para revisar en deta
     }
   }
 
-  // ── Módulo FX de Fondo Vivo y Linterna (NikkoDev FX Engine) ──
+  // ── FX Canvas Constelación y Linterna ──
   function initFX() {
     const canvas = dom.canvasNet;
     if (!canvas) return;
@@ -265,7 +344,7 @@ Me interesa coordinar los 30 minutos de auditoría gratuita para revisar en deta
     const finePointer = matchMedia('(hover: hover) and (pointer: fine)').matches;
     const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-    const LINK_DIST = 135;
+    const LINK_DIST = 140;
     const LINK_SQ = LINK_DIST * LINK_DIST;
 
     function resize() {
@@ -278,7 +357,7 @@ Me interesa coordinar los 30 minutos de auditoría gratuita para revisar en deta
 
       const count = finePointer
         ? Math.max(22, Math.min(50, Math.round((width * height) / 25000)))
-        : Math.max(12, Math.min(20, Math.round((width * height) / 45000)));
+        : Math.max(12, Math.min(22, Math.round((width * height) / 45000)));
 
       nodes = Array.from({ length: count }, () => ({
         x: Math.random() * width,
@@ -294,8 +373,8 @@ Me interesa coordinar los 30 minutos de auditoría gratuita para revisar en deta
 
       const isDark = state.isDark;
       const pointColor = isDark ? '#34D399' : '#047857';
-      const lineAlphaBase = isDark ? 0.22 : 0.16;
-      const dotAlpha = isDark ? 0.65 : 0.45;
+      const lineAlphaBase = isDark ? 0.24 : 0.16;
+      const dotAlpha = isDark ? 0.7 : 0.5;
 
       ctx.lineWidth = 1;
 
@@ -310,14 +389,12 @@ Me interesa coordinar los 30 minutos de auditoría gratuita para revisar en deta
           else if (n.y > height + 10) n.y = -10;
         }
 
-        // Dibujar punto
         ctx.fillStyle = pointColor;
         ctx.globalAlpha = dotAlpha * n.z;
         ctx.beginPath();
         ctx.arc(n.x, n.y, 1.6 * n.z, 0, Math.PI * 2);
         ctx.fill();
 
-        // Conectar puntos cercanos
         for (let j = i + 1; j < nodes.length; j++) {
           const m = nodes[j];
           const dx = n.x - m.x;
@@ -340,7 +417,6 @@ Me interesa coordinar los 30 minutos de auditoría gratuita para revisar en deta
       }
     }
 
-    // Linterna reactiva al cursor/toque para el grid de fondo
     if (dom.fxBg) {
       window.addEventListener('pointermove', (e) => {
         mouse.x = e.clientX;
@@ -350,7 +426,6 @@ Me interesa coordinar los 30 minutos de auditoría gratuita para revisar en deta
       }, { passive: true });
     }
 
-    // Linterna perimetral para paneles de vidrio
     dom.glassPanels.forEach((panel) => {
       panel.addEventListener('pointermove', (e) => {
         const rect = panel.getBoundingClientRect();
@@ -364,11 +439,12 @@ Me interesa coordinar los 30 minutos de auditoría gratuita para revisar en deta
     render();
   }
 
-  // ── Event Listeners de la Calculadora ──
+  // ── Event Listeners ──
   function initListeners() {
-    // 1. Selector de Sector
+    // 1. Sector
     dom.sectorButtons.forEach((btn) => {
       btn.addEventListener('click', () => {
+        triggerHaptic();
         dom.sectorButtons.forEach((b) => b.classList.remove('active'));
         btn.classList.add('active');
         const sectorKey = btn.dataset.sector;
@@ -379,7 +455,7 @@ Me interesa coordinar los 30 minutos de auditoría gratuita para revisar en deta
       });
     });
 
-    // 2. Personas (slider + botones táctiles)
+    // 2. Personas
     dom.personasRange.addEventListener('input', (e) => {
       state.personas = parseInt(e.target.value, 10);
       dom.personasBadge.textContent = state.personas;
@@ -387,6 +463,7 @@ Me interesa coordinar los 30 minutos de auditoría gratuita para revisar en deta
     });
 
     dom.btnPersonasMinus.addEventListener('click', () => {
+      triggerHaptic();
       if (state.personas > parseInt(dom.personasRange.min, 10)) {
         state.personas -= 1;
         dom.personasRange.value = state.personas;
@@ -396,6 +473,7 @@ Me interesa coordinar los 30 minutos de auditoría gratuita para revisar en deta
     });
 
     dom.btnPersonasPlus.addEventListener('click', () => {
+      triggerHaptic();
       if (state.personas < parseInt(dom.personasRange.max, 10)) {
         state.personas += 1;
         dom.personasRange.value = state.personas;
@@ -404,7 +482,7 @@ Me interesa coordinar los 30 minutos de auditoría gratuita para revisar en deta
       }
     });
 
-    // 3. Horas semanales (slider + botones táctiles)
+    // 3. Horas semanales
     dom.horasRange.addEventListener('input', (e) => {
       state.horas = parseInt(e.target.value, 10);
       dom.horasBadge.textContent = `${state.horas}h`;
@@ -412,6 +490,7 @@ Me interesa coordinar los 30 minutos de auditoría gratuita para revisar en deta
     });
 
     dom.btnHorasMinus.addEventListener('click', () => {
+      triggerHaptic();
       if (state.horas > parseInt(dom.horasRange.min, 10)) {
         state.horas -= 1;
         dom.horasRange.value = state.horas;
@@ -421,6 +500,7 @@ Me interesa coordinar los 30 minutos de auditoría gratuita para revisar en deta
     });
 
     dom.btnHorasPlus.addEventListener('click', () => {
+      triggerHaptic();
       if (state.horas < parseInt(dom.horasRange.max, 10)) {
         state.horas += 1;
         dom.horasRange.value = state.horas;
@@ -444,6 +524,7 @@ Me interesa coordinar los 30 minutos de auditoría gratuita para revisar en deta
 
     dom.costoPresetPills.forEach((pill) => {
       pill.addEventListener('click', () => {
+        triggerHaptic();
         const val = parseInt(pill.dataset.val, 10);
         state.costoHora = val;
         dom.costoInput.value = val;
@@ -453,8 +534,9 @@ Me interesa coordinar los 30 minutos de auditoría gratuita para revisar en deta
       });
     });
 
-    // 5. Botón Abrir / Alternar Formulario Lead
+    // 5. Botón Abrir / Alternar Lead Form
     dom.btnOpenLead.addEventListener('click', () => {
+      triggerHaptic();
       const isClosed = !dom.leadFormBox.classList.contains('open');
       dom.leadFormBox.classList.toggle('open');
       if (isClosed) {
@@ -479,6 +561,7 @@ Me interesa coordinar los 30 minutos de auditoría gratuita para revisar en deta
     // 7. Copiar reporte
     dom.btnCopyReport.addEventListener('click', async (e) => {
       e.preventDefault();
+      triggerHaptic();
       const text = generateReportText();
       try {
         if (navigator.clipboard && navigator.clipboard.writeText) {
@@ -498,7 +581,6 @@ Me interesa coordinar los 30 minutos de auditoría gratuita para revisar en deta
     });
   }
 
-  // Inicialización global
   function init() {
     initTheme();
     initListeners();
