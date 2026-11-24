@@ -69,7 +69,7 @@
   // Referencias DOM
   const dom = {
     root: document.documentElement,
-    sectorButtons: document.querySelectorAll('.sec-pill-btn'),
+    sectorButtons: document.querySelectorAll('.sec-chip'),
     sectorContext: document.getElementById('sector-context-text'),
     personasRange: document.getElementById('personas-range'),
     personasBadge: document.getElementById('personas-val'),
@@ -80,7 +80,7 @@
     btnHorasMinus: document.getElementById('btn-horas-minus'),
     btnHorasPlus: document.getElementById('btn-horas-plus'),
     costoInput: document.getElementById('costo-hora-input'),
-    costoPresetPills: document.querySelectorAll('.cost-chip'),
+    costoPresetPills: document.querySelectorAll('.cost-pill-item'),
     // Métricas de Tiempo
     horasRecuperablesVal: document.getElementById('res-horas-recuperables'),
     jornadasText: document.getElementById('res-jornadas-text'),
@@ -111,7 +111,7 @@
     // FX
     fxBg: document.querySelector('.fx-bg'),
     canvasNet: document.getElementById('fxNet'),
-    glassPanels: document.querySelectorAll('.time-hero-panel, .controls-panel, .roi-strip')
+    glassPanels: document.querySelectorAll('.hero-terminal, .time-hero-box, .term-roi-box')
   };
 
   const currencyFormatter = new Intl.NumberFormat('es-CO', {
@@ -295,7 +295,12 @@ Me interesa coordinar los 30 min de auditoría gratuita para revisar en detalle 
 
   function initTheme() {
     const savedTheme = localStorage.getItem('nikkodev-theme');
-    const isDark = savedTheme === 'dark';
+    let isDark = false;
+    if (savedTheme) {
+      isDark = savedTheme === 'dark';
+    } else {
+      isDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    }
     setTheme(isDark);
 
     if (dom.btnThemeToggle) {
@@ -583,11 +588,32 @@ Me interesa coordinar los 30 min de auditoría gratuita para revisar en detalle 
     });
   }
 
+  function initTilt() {
+    const card = document.getElementById('heroTerminal');
+    if (!card) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    if (window.matchMedia('(pointer: coarse)').matches) return;
+    let raf = 0;
+    card.addEventListener('mousemove', (e) => {
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(() => {
+        const r = card.getBoundingClientRect();
+        const x = (e.clientX - r.left) / r.width - 0.5;
+        const y = (e.clientY - r.top) / r.height - 0.5;
+        card.style.transform = `perspective(900px) rotateY(${x * 6}deg) rotateX(${-y * 6}deg) translateY(-2px)`;
+      });
+    });
+    card.addEventListener('mouseleave', () => {
+      card.style.transform = '';
+    });
+  }
+
   function init() {
     initTheme();
     initListeners();
     calculate();
     initFX();
+    initTilt();
   }
 
   if (document.readyState === 'loading') {
